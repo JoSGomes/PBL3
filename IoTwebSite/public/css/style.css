@@ -1,0 +1,27 @@
+body {
+    background-color: rgb(34, 32, 32);
+  }
+nav {
+    background-color:rgb(34, 32, 32);
+  }
+div.subtitle{
+    font-size: 52px;
+    color: white;
+    line-height: 220%;
+    text-align: center;
+}
+td{
+    color: white;
+}
+th{
+    color: white;
+}
+thead{
+    color: white;
+}
+label.form-label{
+    font-size: 35px;
+    line-height: 180%;
+    color: white;
+    padding-left: 3px;
+}

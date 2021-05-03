@@ -25,3 +25,8 @@ label.form-label{
     color: white;
     padding-left: 3px;
 }
+ul.navbar-nav{
+    position: relative;
+    text-align: right;
+    font-size: 20px;
+}

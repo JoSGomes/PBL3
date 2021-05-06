@@ -17,3 +17,4 @@ Route::get('/', [HomeController::class,'index']);
 Route::get('/history', [HomeController::class,'history']);
 Route::get('/create', [HomeController::class,'create']);
 Route::get('/config', [HomeController::class,'config']);
+Route::get('/config/setTime', [HomeController::class,'setTime']);

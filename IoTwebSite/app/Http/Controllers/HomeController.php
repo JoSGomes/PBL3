@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use PhpMqtt\Client\Facades\MQTT;
 
 class HomeController extends Controller
 {
@@ -45,6 +46,11 @@ class HomeController extends Controller
         //
     }
 
+    public function setTime(Request $request){
+        $mqtt = MQTT::connection();
+        $mqtt->publish('INTERVALO_SITE', $request->tempo, 0);  
+        $mqtt->disconnect();
+    }
     /**
      * Display the specified resource.
      *

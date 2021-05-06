@@ -45,7 +45,6 @@ class HomeController extends Controller
     {
         //
     }
-
     public function setTime(Request $request){
         $mqtt = MQTT::connection();
         $mqtt->publish('INTERVALO_SITE', $request->tempo, 0);  

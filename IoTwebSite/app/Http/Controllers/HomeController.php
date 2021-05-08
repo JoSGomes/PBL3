@@ -49,6 +49,7 @@ class HomeController extends Controller
         $mqtt = MQTT::connection();
         $mqtt->publish('INTERVALO_SITE', $request->tempo, 0);  
         $mqtt->disconnect();
+        return redirect('/');
     }
     /**
      * Display the specified resource.

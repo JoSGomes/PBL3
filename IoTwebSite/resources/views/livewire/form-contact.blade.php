@@ -1,5 +1,11 @@
 <div>
     <form wire:submit.prevent = "create">
+        @if ($sucessMessage)
+        <div class="alert alert-success" role="alert">                
+            <strong>Contato Cadastrado!</strong>
+            <button wire:click = "setMessage(null)" type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        @endif
         <div class="row g-3">
             <div class="col">
                 <label for="exampleInputEmail1" class="form-label">Nome do contato</label>
@@ -27,11 +33,5 @@
                 Cadastrar
             </button>
         </div>
-        @if ($sucessMessage)
-        <div class="alert alert-success" role="alert">                
-            <strong>Contato Cadastrado!</strong>
-            <button wire:click = "setMessage(null)" type="button" class="btn-close" aria-label="Close"></button>
-        </div>
-        @endif
     </form>
 </div>

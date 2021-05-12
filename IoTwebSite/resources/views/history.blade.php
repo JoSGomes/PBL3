@@ -1,9 +1,5 @@
 @extends('layouts.template')
 
-@section('title')
-    Histórico
-@endsection
-
 @section('body')
 <div class="subtitle">Histórico de eventos</div>
 <div class="container">

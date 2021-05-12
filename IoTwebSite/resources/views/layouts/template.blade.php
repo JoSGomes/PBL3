@@ -8,13 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     @livewireStyles
     <link rel="stylesheet" href="{{ asset('css/style.css')}}" type="text/css">
-    <title>@yield('title')</title>
+    <title>Monitoramento de Motos</title>
 </head>
 <body>
     <nav class="navbar navbar-dark pl-3">
       
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">IoT - Dispositivo para motos</a>
+          <a class="navbar-brand" href="/">Monitoramento de Motos</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>

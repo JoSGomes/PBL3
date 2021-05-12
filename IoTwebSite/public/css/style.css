@@ -4,7 +4,7 @@ body {
 nav {
     background-color:rgb(34, 32, 32);
   }
-div.subtitle{
+.subtitle{
     font-size: 52px;
     color: white;
     line-height: 220%;
@@ -20,8 +20,8 @@ thead{
     color: white;
 }
 label.form-label{
-    font-size: 35px;
     line-height: 180%;
+    border-color: black;
     color: white;
     padding-left: 3px;
 }
@@ -29,4 +29,9 @@ ul.navbar-nav{
     position: relative;
     text-align: right;
     font-size: 20px;
+}
+
+.scrollable{
+    height: 50%;
+    overflow: auto;
 }

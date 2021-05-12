@@ -1,9 +1,9 @@
 <div>
     <form wire:submit.prevent = "create">
         @if ($sucessMessage)
-        <div class="alert alert-success" role="alert">                
+        <div class="alert alert-light alert-dismissible fade show" role="alert">                
             <strong>Contato Cadastrado!</strong>
-            <button wire:click = "setMessage(null)" type="button" class="btn-close" aria-label="Close"></button>
+            <button wire:click = "resetMessage" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
         <div class="row g-3">
@@ -29,7 +29,6 @@
                     class="spinner-border text-light" 
                     role="status">
                 </span>
-                
                 Cadastrar
             </button>
         </div>

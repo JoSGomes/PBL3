@@ -22,7 +22,7 @@ class FormContact extends Component
         $this->sucessMessage = ' Contato salvo com sucesso ';
     }
 
-    public function setMessage($name) {
-        $this->sucessMessage = $name;
+    public function resetMessage() {
+        $this->sucessMessage = null;
     }
 }

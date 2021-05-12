@@ -27,7 +27,7 @@
                 <a class="nav-link" href="/history">Histórico de eventos</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/create">Cadastro de contatos</a>
+                <a class="nav-link" href="/create">Cadastrar contatos</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/config" ">Configurações</a>

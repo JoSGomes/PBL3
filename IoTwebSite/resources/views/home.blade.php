@@ -5,24 +5,36 @@
 @endsection
 
 @section('body')
-    <div class="subtitle">Dispositivo [ESTADO]</div>
-    <div class="subtitle">Contatos de emergência</div>
     <div class="container">
         <div class="row">
-            <table class="table table-hover table-bordeless">
-                <thead>
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Número</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr >
-                    <td>Mark</td>
-                    <td>Otto</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="col">
+                <div class="subtitle ">Dispositivo [ESTADO]</div>
+                <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
+                <label class="btn btn-outline-light" for="btn-check-outlined">Alarme</label>
+            </div>
+
+            <div class="col">
+                <h1 class="subtitle">Contatos de emergência</h1>
+                <div class="scrollable">
+                    <table class="table table-hover table-bordeless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Número</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr >
+                            <td>Mark</td>
+                            <td>Otto</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </div>
 @endsection
+
+

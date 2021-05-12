@@ -9,13 +9,15 @@
         <div class="row">
             <div class="col">
                 <div class="subtitle ">Dispositivo [ESTADO]</div>
-                <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
-                <label class="btn btn-outline-light" for="btn-check-outlined">Alarme</label>
+                <div class="row position-relative top-50">
+                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
+                    <label class="btn btn-outline-light" for="btn-check-outlined">Alarme</label>
+                </div>
             </div>
 
             <div class="col">
                 <h1 class="subtitle">Contatos de emergência</h1>
-                <div class="scrollable">
+                <div class="scrollable position-relative top-50">
                     <table class="table table-hover table-bordeless">
                         <thead>
                         <tr>

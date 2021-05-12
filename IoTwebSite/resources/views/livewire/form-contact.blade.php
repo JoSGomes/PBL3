@@ -1,19 +1,21 @@
 <div>
     <form wire:submit.prevent = "create">
         @if ($sucessMessage)
-        <div class="alert alert-light alert-dismissible fade show" role="alert">                
+        <div class="alert alert-dark alert-dismissible fade show" role="alert">                
             <strong>Contato Cadastrado!</strong>
             <button wire:click = "resetMessage" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
         <div class="row g-3">
             <div class="col">
-                <label for="exampleInputEmail1" class="form-label">Nome do contato</label>
-                <input wire:model = "name" type="name" class="form-control" name="name"
+                <label for="name" class="form-label">Nome do contato</label>
+                <input wire:model = "name" type="name" class="form-control" name="name">
+                @error('name') <br> <span class="error alert alert-danger pt-3">{{ $message }}</span> <br> @enderror
             </div>
             <div class="col">
-                <label for="exampleInputEmail1" class="form-label">Número</label>
-                <input wire:model = "number" type="name" class="form-control" name="number"
+                <label for="number" class="form-label">Número</label>
+                <input wire:model = "number" type="name" class="form-control" name="number">
+                @error('number') <br> <span class="error alert alert-danger">{{ $message }}</span> <br> @enderror
             </div>
         </div>
         <br><br>

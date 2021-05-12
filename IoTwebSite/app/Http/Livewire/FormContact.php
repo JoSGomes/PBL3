@@ -11,8 +11,22 @@ class FormContact extends Component
     public $number;
     public $sucessMessage;
 
+
+    protected $rules = [
+        'name' => 'required|min:6',
+        'number' => 'required|numeric|min:3',
+    ];
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+
     public function create(){
         
+        //validando
+        $validatedData = $this->validate();
         //salvando na db
 
         //resetando as váriaveis

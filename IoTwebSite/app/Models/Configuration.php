@@ -14,5 +14,5 @@ class Configuration extends Model
         'timeUnitConnection',
         'intervalAlarm',
         'timeUnitAlarm'
-    ]
+    ];
 }

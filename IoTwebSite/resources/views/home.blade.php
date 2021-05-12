@@ -22,10 +22,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr >
-                            <td>Mark</td>
-                            <td>Otto</td>
-                        </tr>
+                        @foreach ($contacts as $contact)
+                            <tr >
+                                 <td>{{$contact->name}}</td>
+                                 <td>{{$contact->number}}</td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

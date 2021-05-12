@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Models\Contact;
 
 class FormContact extends Component
 {
@@ -13,9 +14,10 @@ class FormContact extends Component
 
 
     protected $rules = [
-        'name' => 'required|min:6',
+        'name' => 'required|min:4',
         'number' => 'required|numeric|min:3',
     ];
+
 
     public function updated($propertyName)
     {
@@ -28,6 +30,8 @@ class FormContact extends Component
         //validando
         $validatedData = $this->validate();
         //salvando na db
+
+        Contact::create($validatedData);
 
         //resetando as váriaveis
         $this->reset(['name','number']);

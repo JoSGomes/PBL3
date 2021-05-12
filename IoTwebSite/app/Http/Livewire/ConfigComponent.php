@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use PhpMqtt\Client\Facades\MQTT;
+use App\Models\Configuration;
 
 class ConfigComponent extends Component
 {
@@ -30,6 +31,19 @@ class ConfigComponent extends Component
         'intervalAlarm.gt:0' => 'O campo de tempo de acionamento deve ser maior que zero',
     ];
 
+
+    public function mount()
+    {
+        $config = Configuration::all()->last();
+        if ($config) {
+            $this->intervalConnection = $config->intervalConnection;
+            $this->timeUnitConnection = $config->timeUnitConnection;
+            $this->intervalAlarm = $config->intervalAlarm;
+            $this->timeUnitAlarm = $config->timeUnitAlarm;
+        }
+    }
+
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -40,7 +54,7 @@ class ConfigComponent extends Component
         //validação
         $validatedData = $this->validate();
 
-
+        //enviando tópicos pra placa
         $mqtt = MQTT::connection();
         $mqtt->publish('INTERVALO_SITE_CONNECTION',$validatedData['intervalConnection']*$validatedData['timeUnitConnection'], 0);  
         $mqtt->disconnect();
@@ -49,6 +63,9 @@ class ConfigComponent extends Component
         $mqtt->publish('INTERVALO_SITE_ALARM',$validatedData['intervalAlarm']*$validatedData['timeUnitAlarm'], 0);  
         $mqtt->disconnect();
 
+        //salvando na db
+        Configuration::create($validatedData);
+        
         //mensagem de sucesso
         $this->sucessMessage = 'Configurações alteradas!';
     }

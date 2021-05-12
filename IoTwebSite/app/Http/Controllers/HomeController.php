@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PhpMqtt\Client\Facades\MQTT;
-
+use App\Models\Contact;
 class HomeController extends Controller
 {
     /**
@@ -14,7 +14,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-            return view('home');
+            $contacts = Contact::all();
+            return view('home',compact('contacts'));
     }
     
     public function history()
@@ -44,12 +45,6 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         //
-    }
-    public function setTime(Request $request){
-        $mqtt = MQTT::connection();
-        $mqtt->publish('INTERVALO_SITE', $request->tempo, 0);  
-        $mqtt->disconnect();
-        return redirect('/');
     }
     /**
      * Display the specified resource.

@@ -2,6 +2,12 @@
     <div class="subtitle">Configurações</div>
     <form wire:submit.prevent = "setConfig">
         <div class="container">
+            @if ($sucessMessage)
+            <div class="alert alert-dark alert-dismissible fade show" role="alert">                
+                <strong>{{$sucessMessage}}</strong>
+                <button wire:click = "resetMessage" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
             <div class="row">
                 <div class="col align-self-start">
                     <label class="form-label" for="tempo">Ajustar o tempo de verificação de conexão</label>

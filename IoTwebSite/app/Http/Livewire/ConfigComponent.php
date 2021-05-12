@@ -12,6 +12,7 @@ class ConfigComponent extends Component
     public $timeUnitConnection = 1;
     public $intervalAlarm;
     public $timeUnitAlarm = 1;
+    public $sucessMessage;
 
     protected $rules = [
         'intervalConnection' => 'required|integer|gt:0',
@@ -35,7 +36,11 @@ class ConfigComponent extends Component
     }
 
     public function setConfig(){
+        
+        //validação
         $validatedData = $this->validate();
+
+
         $mqtt = MQTT::connection();
         $mqtt->publish('INTERVALO_SITE_CONNECTION',$validatedData['intervalConnection']*$validatedData['timeUnitConnection'], 0);  
         $mqtt->disconnect();
@@ -44,6 +49,12 @@ class ConfigComponent extends Component
         $mqtt->publish('INTERVALO_SITE_ALARM',$validatedData['intervalAlarm']*$validatedData['timeUnitAlarm'], 0);  
         $mqtt->disconnect();
 
+        //mensagem de sucesso
+        $this->sucessMessage = 'Configurações alteradas!';
+    }
+
+    public function resetMessage() {
+        $this->sucessMessage = null;
     }
 
 }

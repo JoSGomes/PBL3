@@ -33,7 +33,7 @@ class FormContact extends Component
         $this->reset(['name','number']);
        
         //setando a mensagem de sucesso
-        $this->sucessMessage = ' Contato salvo com sucesso ';
+        $this->sucessMessage = ' Contato cadastrado! ';
     }
 
     public function resetMessage() {

@@ -171,39 +171,35 @@ void loop() {
   delay(500);
   char hour_[7];
   sprintf(hour_, "%d:%d", hour(), minute());
-  if(alarm == true){
-    if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || (accelerometer[2][loopSensors] >=  7 && accelerometer[2][loopSensors] <= 10)  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0)//verifica o acelerômetro em X,Y,Z   
-     enviarEvento(hour_, day(), month(), "ASSALTO", "A moto está sendo roubada!!");//colocando as datas manualmente... usar a bib dps
-  }
-  else{//alarme não ativado, segue rotina normal, em movimento.
-    
-    if(( gyroscope[0][loopSensors] <= -60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] >= 6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){           
-      enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");      
+  if(loopSensors != (TAMFILES)){
+    if(alarm == true){
+      if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || (accelerometer[2][loopSensors] >=  7 && accelerometer[2][loopSensors] <= 10)  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0)//verifica o acelerômetro em X,Y,Z   
+       enviarEvento(hour_, day(), month(), "ASSALTO", "A moto está sendo roubada!!");//colocando as datas manualmente... usar a bib dps
     }
-    
-    else if(( gyroscope[0][loopSensors] >= 60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] <= -6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){
-      enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA ESQUERDA");
+    else{//alarme não ativado, segue rotina normal, em movimento.
+      
+      if(( gyroscope[0][loopSensors] <= -60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] >= 6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){           
+        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");      
+      }
+      
+      else if(( gyroscope[0][loopSensors] >= 60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] <= -6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){
+        enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA ESQUERDA");
+        
+      }
+      else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] >= 60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] >= 6 && accelerometer[2][loopSensors] <= 4)){
+        enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA FRENTE");
+        
+      }
+      else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] <= -60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] <= -6 && accelerometer[2][loopSensors] <= 4)){
+        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA TRÁS");
+      }
+      else if( (gyroscope[0][loopSensors] >= 360 || gyroscope[0][loopSensors] <= -360 || gyroscope[1][loopSensors] >= 360 || gyroscope[1][loopSensors] <= -360 || gyroscope[2][loopSensors] >= 360 || gyroscope[2][loopSensors] <= -360) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] == -10 )){
+        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "CAPOTOU");
+      }
       
     }
-    else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] >= 60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] >= 6 && accelerometer[2][loopSensors] <= 4)){
-      enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA FRENTE");
-      
-    }
-    else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] <= -60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] <= -6 && accelerometer[2][loopSensors] <= 4)){
-      enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA TRÁS");
-    }
-    else if( (gyroscope[0][loopSensors] >= 360 || gyroscope[0][loopSensors] <= -360 || gyroscope[1][loopSensors] >= 360 || gyroscope[1][loopSensors] <= -360 || gyroscope[2][loopSensors] >= 360 || gyroscope[2][loopSensors] <= -360) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] == -10 )){
-      enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "CAPOTOU");
-      Serial.println(gyroscope[0][loopSensors]);
-      Serial.println(gyroscope[1][loopSensors]);
-      Serial.println(gyroscope[2][loopSensors]);
-    }
-    
   }
-  
   loopSensors++;
-  if(loopSensors == (TAMFILES - 1))//se já percorreu todos os valores dos sensores, então volta desde o primeiro valor. -1 pois loopSensors acessa os vetores de tamanho -> TAMFILES.
-    loopSensors = 0;
   delay(300);
 }
 

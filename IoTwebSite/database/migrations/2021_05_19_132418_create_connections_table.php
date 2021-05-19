@@ -16,7 +16,8 @@ class CreateConnectionsTable extends Migration
         Schema::create('connections', function (Blueprint $table) {
             $table->id();
             $table->string('value');
-            $table->timestamps();
+            $table->string('hour');
+            $table->integer('interval');
         });
     }
 

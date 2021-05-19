@@ -41,7 +41,7 @@ byte packetBuffer[NTP_PACKET_SIZE];
 
 //Pino do botao da placa
 #define BUTTON D3
-#define TAMFILES 31//tamanho definido no txt para admitir a rotina
+#define TAMFILES 1//tamanho definido no txt para admitir a rotina
 File fA, fG;
 
 //Nome e senha da rede WiFi:
@@ -55,7 +55,7 @@ void reconnect(); //Procedimento para conectar a placa ao MQTT.
 void carregarArquivos(); // Procedimento que carrega os arquivos de certificados do AWS.
 void sendNTPpacket(IPAddress &address);
 void enviarEvento(char * hour_, int day_, int month_, char * name_,char * description);
-
+void sendConnection(char * hour_, int interval);
 time_t getNtpTime();
 
 
@@ -80,6 +80,7 @@ char pass[] = SECRET_PASSDB;
 
 //Comando para mandar os dados para o banco de dados:
 char INSERT_SQL_EVENTS[] = "INSERT INTO pbl.events (hour, day, month, name, description) VALUES ('%s','%d','%d','%s','%s')";
+char UPDATE_SQL_CONNECTION[] = "INSERT INTO pbl.connections (value, hour, interval) VALUES ('CONECTADA', '%s', '%d')";
 char query[128];
 
 
@@ -87,19 +88,26 @@ char query[128];
 WiFiClient clientSQL;
 MySQL_Connection conn((Client *)&clientSQL);
 
-
-int laterMillis;//tempo anterior.
-int currentMillis;//tempo atual
-int intervalConnection = 10000; //intervalConnectiono para envio de status. default 10s.
-
-
 int accelerometer[3][TAMFILES];
 int gyroscope[3][TAMFILES];
 
+//Variaveis para intervalo de conexão
+int laterMillis;//tempo anterior.
+int currentMillis;//tempo atual
+int intervalConnection = 60000; //intervalConnectiono para envio de status. default 10s.
+
+//Variaveis para intervalo de ativação do alarme
 boolean alarm = false;
-int intervalAlarm = 10000;//tempo limite para quando está parado, se antigido, então alarme é ativado.
+int intervalAlarm = 60000;//tempo limite para quando está parado, se antigido, então alarme é ativado.
 int laterMillisAlarm;
 int currentMillisAlarm;
+
+//Variaveis para intervalo com tempo limite de falar que está tudo bem para a placa
+boolean imOK = true;
+int intervalImOK = 60000;
+int laterMillisImOK;
+int currentMillisImOK;
+
 
 int loopSensors = 0;//contador utilizado para variar sequenciamente no Loop o valor dos sensores com base no TXT.
 
@@ -154,24 +162,29 @@ void loop() {
   //Verifica se o button foi pressionado:
   if(!digitalRead(BUTTON)){
     //Verifica o estado da lâmpada:
-    if(!digitalRead(LED_BUILTIN)){
+    if(!digitalRead(LED_BUILTIN) && imOK){
       digitalWrite(LED_BUILTIN, HIGH);
-      currentMillisAlarm = NULL;
-      alarm = false;
-      Serial.println("Alarme desativado!");
+      desativarAlarm();
     }
-    else{
-      digitalWrite(LED_BUILTIN, LOW);
-      Serial.println("Alarme ativado!");
-      alarm = true;
-      
+    else if(imOK){
+      ativarAlarm();    
+    }    
+    if(!imOK){
+      imOK = true;
+      currentMillisImOK = NULL;
+      Serial.println("Usuário clicou no botão antes do tempo limite, está tudo bem.");
     }
+    
   }
   
   currentMillis = millis();
   if(currentMillis - laterMillis >= intervalConnection){
-    client.publish("CONEXAO","{\"status\": \"CONNECTED\"}");
-    laterMillis = millis();
+    
+    //Publica para informar que a placa esta conectada:
+      char hour_[10];
+      sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
+      sendConnection(hour_, intervalAlarm/1000);    
+      laterMillis = millis();
   }
 
   delay(500);
@@ -181,28 +194,31 @@ void loop() {
   if(loopSensors < (TAMFILES)){
     if(alarm == true){
       if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || accelerometer[2][loopSensors] != 10  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0){//verifica o acelerômetro em X,Y,Z   
-        enviarEvento(hour_, day(), month(), "ASSALTO", "A moto está sendo roubada!!");
+        enviarEvento(hour_, day(), month(), "POSSIVEL ASSALTO", "A moto pode estar sendo roubada!!");
+        imOK = false;
       }
     }
-    else{//alarme não ativado, segue rotina normal, em movimento.
-      
+    else{//alarme não ativado, segue rotina normal, em movimento.      
       if(( gyroscope[0][loopSensors] <= -60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] >= 6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){           
-        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");      
+        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");     
+        imOK = false;
       }
       
       else if(( gyroscope[0][loopSensors] >= 60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] <= -6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA ESQUERDA");
-        
+        imOK = false;
       }
       else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] >= 60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] >= 6 && accelerometer[2][loopSensors] <= 4)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA FRENTE");
-        
+        imOK = false;
       }
       else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] <= -60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] <= -6 && accelerometer[2][loopSensors] <= 4)){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA TRÁS");
+        imOK = false;
       }
       else if( (gyroscope[0][loopSensors] >= 360 || gyroscope[0][loopSensors] <= -360 || gyroscope[1][loopSensors] >= 360 || gyroscope[1][loopSensors] <= -360 || gyroscope[2][loopSensors] >= 360 || gyroscope[2][loopSensors] <= -360) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] == -10 )){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "CAPOTOU");
+        imOK = false;
       }
       else if(accelerometer[0][loopSensors] == 0 && accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] ==  10  && gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0){
         if(currentMillisAlarm == NULL){
@@ -210,17 +226,48 @@ void loop() {
         }
         laterMillisAlarm = millis();
         if(laterMillisAlarm - currentMillisAlarm >= intervalAlarm){
-          digitalWrite(LED_BUILTIN, LOW);
-          alarm = true;    
-          Serial.println("Moto parada até o tempo limite, alarme ativado!");  
+          ativarAlarm();    
+          Serial.println("Moto parada até o tempo limite, alarme ativado!");            
         }
       }
+      else{
+        imOK = true;  
+      }
     }
+  }
+
+  if(imOK == false){
+      if(currentMillisImOK = NULL){
+        currentMillisImOK = millis();  
+      }
+      laterMillisImOK = millis();
+      if(laterMillisImOK - currentMillisImOK >= intervalImOK){   
+          Serial.println("Usuário sofreu um acidente ou a moto foi assaltada!");  
+          Serial.println("Notificando contatos...");  
+          if(alarm == true){
+            enviarEvento(hour_, day(), month(), "ASSALTO", "OCORREU UM ASSALTO");        
+          }
+          else{
+            enviarEvento(hour_, day(), month(), "ACIDENTE", "OCORREU UM ACIDENTE");
+          }
+          imOK = true;
+      }    
   }
   loopSensors++;
   delay(300);
 }
 
+void ativarAlarm(){
+  digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("Alarme ativado!");
+  alarm = true;
+}
+void desativarAlarm(){  
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("Alarme desativado!");
+  currentMillisAlarm = NULL;
+  alarm = false;
+}
 /*
  * O procedimento que é chamada sempre que algum tópico assinado é atualizado
  * 
@@ -255,7 +302,20 @@ void callback(char * topic, byte * payload, unsigned int length){
     Serial.println(intervalAlarm);
     intervalAlarm = intervalAlarm * 1000;//para milissegundos
   }
-  
+  else if(!strcmp(topic, "SET_ALARM")){
+    while(i < length){
+      aux[i] = (char) payload[i];
+      i++;
+    }
+    int set_alarm = atoi(aux);
+    if(set_alarm == 1){
+      ativarAlarm();  
+    }
+    else{
+      desativarAlarm();  
+    }
+    
+  }
 }
 
 
@@ -325,10 +385,15 @@ void reconnect(){
       Serial.println("CONECTADO");
       
       //Publica para informar que a placa esta conectada:
-      client.publish("CONEXAO","{\"status\": \"PLACA CONECTADA\"}");
-
+      char hour_[10];
+      Serial.print("oi");
+      sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
+      sendConnection(hour_, intervalAlarm/1000);
+      
       //Faz a inscrição em tópicos:  
       client.subscribe("INTERVALO_SITE_CONNECTION");
+      client.subscribe("INTERVALO_SITE_ALARM");
+      client.subscribe("SET_ALARM");
     }
     else{
       
@@ -572,6 +637,18 @@ void enviarEvento(char * hour_ ,int day_, int month_, char * name_, char * descr
   cur_mem->execute(query);
   
   Serial.println("Evento enviado!");
+  // deleta o cursor para liberar memória:
+  delete cur_mem;
+}
+void sendConnection(char * hour_, int interval){
+  //transforma os dados em um comando do MySQL:
+  sprintf(query, UPDATE_SQL_CONNECTION, hour_, interval);
+  // Inicia a instancia da classe de consulta:
+  MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
+  //Executa a consulta (query):
+  cur_mem->execute(query);
+  
+  Serial.println("Estado da conexão enviado!");
   // deleta o cursor para liberar memória:
   delete cur_mem;
 }

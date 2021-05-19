@@ -19,6 +19,8 @@ class CreateConfigurationsTable extends Migration
             $table->integer('timeUnitConnection');
             $table->integer('intervalAlarm');
             $table->integer('timeUnitAlarm');
+            $table->integer('intervalBem');
+            $table->integer('timeUnitBem');
             $table->timestamps();
         });
     }

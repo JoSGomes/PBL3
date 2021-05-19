@@ -34,6 +34,19 @@
                         </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="col align-self-start">
+                    <label class="form-label" for="tempo">Ajustar o tempo de 'estou bem'</label>
+                    <input wire:model="intervalBem" class="form-control" type="text" name="tempoConnection" id="">
+                </div>
+                <div class="col align-self-end">
+                    <select wire:model = "timeUnitBem"  class="form-select" id="inputGroupSelect01">
+                        <option value="1">Segundos</option>
+                        <option value="60">Minutos</option>
+                        <option value="3600">Horas</option>
+                        </select>
+                </div>
+            </div>
             <div class="row position-relative pt-3">
                 <div class="col-3">
                     <button
@@ -55,6 +68,7 @@
             <div class="row">
                 @error('intervalAlarm') <span class="error alert alert-danger">{{ $message }}</span> <br> @enderror
                 @error('intervalConnection') <span class="error alert alert-danger">{{ $message }}</span> <br> @enderror
+                @error('intervalBem') <span class="error alert alert-danger">{{ $message }}</span> <br> @enderror
             </div>
         </div>
     </form>

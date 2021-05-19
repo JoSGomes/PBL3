@@ -39,7 +39,6 @@
                     <button
                         wire:loading.attr="disabled"
                         wire:target="setConfig" 
-                        wire:click = 'search'
                         class="btn btn-outline-light me-md-2">
                         Salvar configurações
                     </button>

@@ -57,6 +57,7 @@ class ConfigComponent extends Component
         //enviando tópicos pra placa
         $mqtt = MQTT::connection();
         $mqtt->publish('INTERVALO_SITE_CONNECTION',$validatedData['intervalConnection']*$validatedData['timeUnitConnection'], 0); 
+        sleep(1);
         $mqtt->publish('INTERVALO_SITE_ALARM',$validatedData['intervalAlarm']*$validatedData['timeUnitAlarm'], 0);  
         $mqtt->disconnect();
 

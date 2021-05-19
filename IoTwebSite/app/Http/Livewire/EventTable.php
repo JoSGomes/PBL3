@@ -7,9 +7,16 @@ use App\Models\Event;
 
 class EventTable extends Component
 {
+    public $events;
+    public $day;
+    public $month;
+
     public function render()
     {
-        $events = Event::all();
-        return view('livewire.event-table',compact('events'));
+        return view('livewire.event-table');
+    }
+
+    public function search(){
+        $this->events = Event::where('month',$this->month)->where('day',$this->day)->get();
     }
 }

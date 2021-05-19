@@ -5,10 +5,7 @@
         <div class="row">
             <div class="col">
                 <div class="subtitle ">Dispositivo [ESTADO]</div>
-                <div class="row position-relative top-50">
-                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
-                    <label class="btn btn-outline-light" for="btn-check-outlined"> Alarme </label>
-                </div>
+                <livewire:btn-alarm/>
             </div>
 
             <div class="col">

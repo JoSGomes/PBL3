@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use PhpMqtt\Client\Facades\MQTT;
 
 class BtnAlarm extends Component
 {

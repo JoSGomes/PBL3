@@ -41,7 +41,7 @@ byte packetBuffer[NTP_PACKET_SIZE];
 
 //Pino do botao da placa
 #define BUTTON D3
-#define TAMFILES 8//tamanho definido no txt para admitir a rotina
+#define TAMFILES 31//tamanho definido no txt para admitir a rotina
 File fA, fG;
 
 //Nome e senha da rede WiFi:
@@ -97,13 +97,15 @@ int accelerometer[3][TAMFILES];
 int gyroscope[3][TAMFILES];
 
 boolean alarm = false;
-int intervalAlarm;//tempo limite para quando está parado, se antigido, então alarme é ativado.
+int intervalAlarm = 10000;//tempo limite para quando está parado, se antigido, então alarme é ativado.
+int laterMillisAlarm;
+int currentMillisAlarm;
 
 int loopSensors = 0;//contador utilizado para variar sequenciamente no Loop o valor dos sensores com base no TXT.
 
 void setup() {
   
-  laterMillis = millis();//captura o primeiro milli de inicialização da placa.
+  
   Serial.begin(115200); //inicia o display serial, para depuração.
   pinMode(LED_BUILTIN, OUTPUT); // inicializa o pino do led como saída.
   pinMode(BUTTON, INPUT_PULLUP); //inicializa o pino do botao como entrada.
@@ -136,6 +138,8 @@ void setup() {
   //Faz a sincronização do provedor para capturar o timestemp correto:
   setSyncProvider(getNtpTime);
   setSyncInterval(300);
+  
+  laterMillis = millis();//captura o primeiro milli de inicialização da placa.
 }
 
 void loop() {
@@ -152,11 +156,13 @@ void loop() {
     //Verifica o estado da lâmpada:
     if(!digitalRead(LED_BUILTIN)){
       digitalWrite(LED_BUILTIN, HIGH);
-      
+      currentMillisAlarm = NULL;
       alarm = false;
+      Serial.println("Alarme desativado!");
     }
     else{
       digitalWrite(LED_BUILTIN, LOW);
+      Serial.println("Alarme ativado!");
       alarm = true;
       
     }
@@ -171,10 +177,12 @@ void loop() {
   delay(500);
   char hour_[7];
   sprintf(hour_, "%d:%d", hour(), minute());
-  if(loopSensors != (TAMFILES)){
+  
+  if(loopSensors < (TAMFILES)){
     if(alarm == true){
-      if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || (accelerometer[2][loopSensors] >=  7 && accelerometer[2][loopSensors] <= 10)  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0)//verifica o acelerômetro em X,Y,Z   
-       enviarEvento(hour_, day(), month(), "ASSALTO", "A moto está sendo roubada!!");//colocando as datas manualmente... usar a bib dps
+      if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || accelerometer[2][loopSensors] != 10  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0){//verifica o acelerômetro em X,Y,Z   
+        enviarEvento(hour_, day(), month(), "ASSALTO", "A moto está sendo roubada!!");
+      }
     }
     else{//alarme não ativado, segue rotina normal, em movimento.
       
@@ -196,7 +204,17 @@ void loop() {
       else if( (gyroscope[0][loopSensors] >= 360 || gyroscope[0][loopSensors] <= -360 || gyroscope[1][loopSensors] >= 360 || gyroscope[1][loopSensors] <= -360 || gyroscope[2][loopSensors] >= 360 || gyroscope[2][loopSensors] <= -360) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] == -10 )){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "CAPOTOU");
       }
-      
+      else if(accelerometer[0][loopSensors] == 0 && accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] ==  10  && gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0){
+        if(currentMillisAlarm == NULL){
+            currentMillisAlarm = millis();
+        }
+        laterMillisAlarm = millis();
+        if(laterMillisAlarm - currentMillisAlarm >= intervalAlarm){
+          digitalWrite(LED_BUILTIN, LOW);
+          alarm = true;    
+          Serial.println("Moto parada até o tempo limite, alarme ativado!");  
+        }
+      }
     }
   }
   loopSensors++;
@@ -226,7 +244,16 @@ void callback(char * topic, byte * payload, unsigned int length){
      }
       intervalConnection = atoi(aux);
       Serial.println(intervalConnection);
-      intervalConnection = intervalConnection * 1000; //para millisegundos
+      intervalConnection = intervalConnection * 1000;//para milissegundos
+  }
+  else if(!strcmp(topic, "INTERVALO_SITE_ALARM")){
+    while(i < length){
+      aux[i] = (char) payload[i];
+      i++;
+    }
+    intervalAlarm = atoi(aux);
+    Serial.println(intervalAlarm);
+    intervalAlarm = intervalAlarm * 1000;//para milissegundos
   }
   
 }
@@ -352,6 +379,7 @@ void loadSensors(){
         if(divLineA != NULL){
           accelerometer[i][j] = atoi(divLineA); 
           i++;
+          
         }
       }
       i = 0;

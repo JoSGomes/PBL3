@@ -13,6 +13,8 @@ class Configuration extends Model
         'intervalConnection',
         'timeUnitConnection',
         'intervalAlarm',
-        'timeUnitAlarm'
+        'timeUnitAlarm',
+        'intervalBem',
+        'timeUnitBem'
     ];
 }

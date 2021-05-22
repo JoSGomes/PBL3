@@ -80,7 +80,7 @@ char pass[] = SECRET_PASSDB;
 
 //Comando para mandar os dados para o banco de dados:
 char INSERT_SQL_EVENTS[] = "INSERT INTO pbl.events (hour, day, month, name, description) VALUES ('%s','%d','%d','%s','%s')";
-char UPDATE_SQL_CONNECTION[] = "INSERT INTO pbl.connections (value, hour, interval) VALUES ('CONECTADA', '%s', '%d')";
+char UPDATE_SQL_CONNECTION[] = "INSERT INTO pbl.connections (value, hour, interval) VALUES ('CONECTADA','%s','%d')";
 char query[128];
 
 
@@ -139,13 +139,19 @@ void setup() {
   loadSensors();
   //Conecta a placa ao MQTT
   reconnect();
-  
+
    //inicia o objeto Udp na portal local:
   Udp.begin(localPort);
 
   //Faz a sincronização do provedor para capturar o timestemp correto:
   setSyncProvider(getNtpTime);
   setSyncInterval(300);
+ 
+  //Publica para informar que a placa esta conectada:
+  char hour_[12];
+  sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
+  int secondsAlarm = intervalAlarm/1000;
+  sendConnection(hour_, secondsAlarm);
   
   laterMillis = millis();//captura o primeiro milli de inicialização da placa.
 }
@@ -181,7 +187,7 @@ void loop() {
   if(currentMillis - laterMillis >= intervalConnection){
     
     //Publica para informar que a placa esta conectada:
-      char hour_[10];
+      char hour_[12];
       sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
       sendConnection(hour_, intervalAlarm/1000);    
       laterMillis = millis();
@@ -383,12 +389,6 @@ void reconnect(){
       delay(1500);
       digitalWrite(LED_BUILTIN, HIGH);
       Serial.println("CONECTADO");
-      
-      //Publica para informar que a placa esta conectada:
-      char hour_[10];
-      Serial.print("oi");
-      sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-      sendConnection(hour_, intervalAlarm/1000);
       
       //Faz a inscrição em tópicos:  
       client.subscribe("INTERVALO_SITE_CONNECTION");
@@ -635,7 +635,7 @@ void enviarEvento(char * hour_ ,int day_, int month_, char * name_, char * descr
   MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
   //Executa a consulta (query):
   cur_mem->execute(query);
-  
+  Serial.println(query);
   Serial.println("Evento enviado!");
   // deleta o cursor para liberar memória:
   delete cur_mem;
@@ -647,7 +647,7 @@ void sendConnection(char * hour_, int interval){
   MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
   //Executa a consulta (query):
   cur_mem->execute(query);
-  
+  Serial.println(query);
   Serial.println("Estado da conexão enviado!");
   // deleta o cursor para liberar memória:
   delete cur_mem;

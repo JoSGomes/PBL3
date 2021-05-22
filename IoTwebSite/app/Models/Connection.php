@@ -9,6 +9,8 @@ class Connection extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $fillable = [
         'value',
         'hour',

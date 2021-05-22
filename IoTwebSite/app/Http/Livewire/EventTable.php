@@ -19,4 +19,15 @@ class EventTable extends Component
     public function search(){
         $this->events = Event::where('month',$this->month)->where('day',$this->day)->get();
     }
+
+    public function mount(){
+        
+        $lastEvent = Event::all()->last();
+        if ($lastEvent) {
+            $this->month = $lastEvent->month;
+            $this->day =  $lastEvent->day;
+            $this->events = $lastEvent->get();
+        }
+        
+    }
 }

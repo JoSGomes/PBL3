@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <div id="stateDevice" class="subtitle ">Dispositivo [ESTADO]</div>
+                <livewire:state-device/>
                 <livewire:btn-alarm/>
             </div>
 
@@ -32,12 +32,6 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script> 
-        $(document).ready(setInterval(function(){
-            
-        },1000));
-    </script>
 @endsection
 
 

@@ -19,7 +19,8 @@ class BtnAlarm extends Component
             $mqtt = MQTT::connection();
             $mqtt->publish('SET_ALARM',1, 0);
             $mqtt->disconnect(); 
-
+           
+           
 
         }else {
             //alarm dest

@@ -11,7 +11,7 @@
     <title>Monitoramento de Motos</title>
 </head>
 <body>
-    <nav class="navbar navbar-dark pl-3">
+    <nav style="font-family: Andale Mono, monospace" class="navbar navbar-dark pl-3">
       
         <div class="container-fluid">
           <a class="navbar-brand" href="/">Monitoramento de Motos</a>
@@ -37,7 +37,7 @@
         </div>
     
       </nav>
-      <div class="container">
+      <div style="font-family: Andale Mono, monospace" class="container">
        @yield('body')
       </div>  
     @livewireScripts

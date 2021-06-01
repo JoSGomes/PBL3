@@ -1,54 +1,49 @@
+/*Bibliotecas para manipulação de I/O e strings*/
 #include <stdio.h>
 #include <string.h>
+
+/*Biblioteca para captura do 'Timestamp'*/
 #include <TimeLib.h>
 
-/*Bibliotecas para fazer a comunicação com o MQTT usando o broker do AWS*/
+/*Bibliotecas para fazer comunicação com o servidor MQTT da AWS*/
 #include <WiFiUdp.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <NTPClient.h>
 
-/******************************************************************************/
-/*****VARIAVEIS E CONSTANTES DEFINIDAS PARA A CAPTURA DO TIMESTAMP:***********/
-/*****************************************************************************/
-//Servidor NTP usado para o timestemp
-static const char ntpServerName[] = "us.pool.ntp.org";
-unsigned int localPort = 8888;
-//Time zone de São Paulo, Brasil
-const int timeZone = -3;
-
-//instancia de um objeto WiFiUDP
-WiFiUDP Udp;
-
-
-//buffer para armazenar os pacotes de entrada e saída
-byte packetBuffer[NTP_PACKET_SIZE];
-
-//FIM DAS VARIAVEIS DE TIMESTAMP
-
-/*Arquivo contendo usuário e senha do MySQL*/
+/*Arquivos contendo senhas e credenciais*/
 #include "arduino_secrets.h"
-
-/*Arquivo contendo usuário e senha do WiFi e o endPoint da coisa da AWS*/
 #include "credenciais.h"
 
-/*Biblioteca para utilizar a memória EEPROM da ESP8266*/
-#include <EEPROM.h>
-
-/*Bibliotecas para fazer a comunicação da placa com o banco de dados MySQL*/
+/*Bibliotecas para conexão da placa com o banco de dados MySQL*/
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 
-//Pino do botao da placa
+/********************************************************************/
+/*****VARIAVEIS E CONSTANTES DEFINIDAS PARA A CAPTURA DO 'TIMESTAMP'***/
+/********************************************************************/
+//Servidor NTP usado para o 'timestamp':
+static const char ntpServerName[] = "us.pool.ntp.org";
+unsigned int localPort = 8888;
+
+//Time-zone de São Paulo, Brasil:
+const int timeZone = -3;
+
+//Objeto WiFiUDP:
+WiFiUDP Udp;
+
+//Buffer para armazenar os pacotes de entrada e saída:
+byte packetBuffer[NTP_PACKET_SIZE];
+
+/********************************************************************/
+/**********************'DEFINES' NECESSÁRIOS*************************/
+/********************************************************************/
+//Pino do botão da placa:
 #define BUTTON D3
-#define TAMFILES 1//tamanho definido no txt para admitir a rotina
-File fA, fG;
 
-//Nome e senha da rede WiFi:
-const char * ssid = USER_WIFI;
-const char * password = PASSWORD_WIFI;
-
-
+/********************************************************************/
+/***************DECLARAÇÃO DE FUNÇÕES/PROCEDIMENTOS******************/
+/********************************************************************/
 void callback(char* topic, byte *payload, unsigned int length); // Procedimento chamado quando algum tópico inscrito é atualizado.
 void setupWifi(); //Procedimento para conectar a placa ao WiFi.
 void reconnect(); //Procedimento para conectar a placa ao MQTT.
@@ -57,62 +52,58 @@ void sendNTPpacket(IPAddress &address);
 void enviarEvento(char * hour_, int day_, int month_, char * name_,char * description);
 void sendConnection(char * hour_, int interval);
 time_t getNtpTime();
+void desativarAlarm();
+void ativarAlarm();
+/********************************************************************/
+/***************VARIAVEIS E OBJETOS NECESSÁRIOS**********************/
+/********************************************************************/
 
-
-//O end point da thing criada no AWS:
-const char * awsEndPoint = ENDPOINT_AWS;
-
-//instancia um objeto do tipo NTPClient:
+//Objeto NTPClient e seu cliente UDP (objeto WiFiUDP):
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org");
+NTPClient timeClient(ntpUDP,"pool.ntp.org");
 
-//instancia um objeto do tipo WiFiClientSecure:
+//Objeto WiFiClientSecure;
 WiFiClientSecure espClient;
-//Configuração padrão do MQTT:
-PubSubClient client(awsEndPoint, 8883  , callback, espClient);
 
-//Endereço IP do Banco de dados [3.232.98.125]:
+//Objeto PubSubClient com suas configurações para comunicação com o Broker do AWS:
+PubSubClient client(ENDPOINT_AWS, 8883, callback, espClient);
+
+//Endereço IP do banco de dados [3.232.98.125]:
 IPAddress server_addr(3,232,98,125);
 
-//usuário e senha do banco MySQL:
-char user[] = SECRET_USERDB;
-char pass[] = SECRET_PASSDB;
-
-//Comando para mandar os dados para o banco de dados:
+//Comandos para mandar os dados para o banco de dados:
 char INSERT_SQL_EVENTS[] = "INSERT INTO pbl.events (hour, day, month, name, description) VALUES ('%s','%d','%d','%s','%s')";
-char UPDATE_SQL_CONNECTION[] = "INSERT INTO pbl.connections (value, hour, interval) VALUES ('CONECTADA','%s','%d')";
+char UPDATE_SQL_CONNECTION[] = "UPDATE `pbl`.`connections` SET `value` = 'Conectado', `hour` = '%s', `interval` = '%d' WHERE (`id` = '1')";
 char query[128];
 
-
-//Objeto conn, com um clientSQL para a conexão com o MySQL:
+//Objeto MySQL_Connection com seu Client para conexão com o banco de dados MySQL:
 WiFiClient clientSQL;
-MySQL_Connection conn((Client *)&clientSQL);
+MySQL_Connection conn((Client*) &clientSQL);
 
-int accelerometer[3][TAMFILES];
-int gyroscope[3][TAMFILES];
+//Matrizes para capturar os dados dos arquivos de dados de rotina:
+float accelerometer = 0;
+float gyroscope[3];
 
-//Variaveis para intervalo de conexão
-int laterMillis;//tempo anterior.
-int currentMillis;//tempo atual
-int intervalConnection = 60000; //intervalConnectiono para envio de status. default 10s.
+//Variaveis para intervalo de conexão:
+int laterMillis; //tempo anterior
+int currentMillis; //tempo atual
+int intervalConnection = 60000;//intervalo de conexão para envio de status(em milissegundos). Padrão de 1 min.
 
-//Variaveis para intervalo de ativação do alarme
+//Variaveis para intervalo de ativação do alarme:
 boolean alarm = false;
-int intervalAlarm = 60000;//tempo limite para quando está parado, se antigido, então alarme é ativado.
+int intervalAlarm = 60000; // tempo limite para quando esta parado(em milissegundos), se atingido, então o alarme é ativado.
 int laterMillisAlarm;
-int currentMillisAlarm;
+int currentMillisAlarm = NULL;
 
-//Variaveis para intervalo com tempo limite de falar que está tudo bem para a placa
+//Variaveis para intervalo com tempo limite de falar que "está tudo bem":
 boolean imOK = true;
 int intervalImOK = 60000;
 int laterMillisImOK;
-int currentMillisImOK;
+int currentMillisImOK = NULL;
 
-
-int loopSensors = 0;//contador utilizado para variar sequenciamente no Loop o valor dos sensores com base no TXT.
-
+/*************************************************************************/
+boolean readTrue = false;
 void setup() {
-  
   
   Serial.begin(115200); //inicia o display serial, para depuração.
   pinMode(LED_BUILTIN, OUTPUT); // inicializa o pino do led como saída.
@@ -123,7 +114,7 @@ void setup() {
   delay(1000);
 
   //Realiza a conexão com o MySQL:
-  while (!conn.connect(server_addr, 3306, user, pass)) {
+  while (!conn.connect(server_addr, 3306, SECRET_USERDB, SECRET_PASSDB)) {
     Serial.println("Conexão SQL falhou.");
     conn.close();
     Serial.println("passou do conn");
@@ -135,12 +126,11 @@ void setup() {
   
   //faz o carregamentos dos certificados no espClient:
   carregarArquivos();
-
-  loadSensors();
+  
   //Conecta a placa ao MQTT
   reconnect();
-
-   //inicia o objeto Udp na portal local:
+  
+   //inicia o objeto Udp na portal local informada (8888):
   Udp.begin(localPort);
 
   //Faz a sincronização do provedor para capturar o timestemp correto:
@@ -150,14 +140,22 @@ void setup() {
   //Publica para informar que a placa esta conectada:
   char hour_[12];
   sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-  int secondsAlarm = intervalAlarm/1000;
-  sendConnection(hour_, secondsAlarm);
+  sendConnection(hour_, intervalAlarm/1000);
   
-  laterMillis = millis();//captura o primeiro milli de inicialização da placa.
+  
+  //captura o primeiro milli de inicialização da placa.
+  laterMillis = millis();
+
+  File f = SPIFFS.open("/historic.txt", "w");
+  f.close();
 }
 
 void loop() {
-  
+  File f = SPIFFS.open("/historic.txt", "r");
+  while(f.available()){
+    Serial.println(f.readStringUntil('\n'));
+  }
+  f.close();
   if(!client.connected())
     reconnect();
 
@@ -197,43 +195,81 @@ void loop() {
   char hour_[7];
   sprintf(hour_, "%d:%d", hour(), minute());
   
-  if(loopSensors < (TAMFILES)){
+  if(Serial.available()){
+    accelerometer = 0;
+    readTrue = true;
+    int dado[6];
+    int i = 0;
+    int buff = 0;
+    while(Serial.available()){
+      dado[i] = Serial.read();
+      buff = Serial.read();
+      if(buff != 44){
+        if(buff != 10){
+          dado[i] = dado[i] + buff;
+          buff = Serial.read();
+        }
+      }
+      i++;
+    }
+    for(i = 0; i<6; i++){
+      if(i<3)
+        accelerometer = accelerometer + ((dado[i] - 127)*0.015625);
+      else
+        gyroscope[i-3] = (dado[i] - 127)*1.953125;
+      Serial.print(dado[i]);
+      Serial.print(" ");
+    }
+  }
+  else{
+    readTrue = false;
+  }
+  Serial.println("");
+  
+    
+  if(readTrue && imOK){
     if(alarm == true){
-      if(accelerometer[0][loopSensors] != 0 || accelerometer[1][loopSensors] != 0 || accelerometer[2][loopSensors] != 10  || gyroscope[0][loopSensors] != 0 || gyroscope[1][loopSensors] != 0 || gyroscope[2][loopSensors] != 0){//verifica o acelerômetro em X,Y,Z   
-        enviarEvento(hour_, day(), month(), "POSSIVEL ASSALTO", "A moto pode estar sendo roubada!!");
+      if(accelerometer != 0 || gyroscope[0] != 0 || gyroscope[1] != 0 || gyroscope[2] != 0){//verifica o acelerômetro em X,Y,Z
+        enviarEvento(hour_, day(), month(), "POSSIVEL FURTO", "A moto pode estar sendo roubada!!");
         imOK = false;
+        sendHistoric();
       }
     }
-    else{//alarme não ativado, segue rotina normal, em movimento.      
-      if(( gyroscope[0][loopSensors] <= -60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] >= 6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){           
+    else{//alarme não ativado, segue rotina normal, em movimento.
+      if((gyroscope[0] == 0 && gyroscope[1] <= -60 && gyroscope[2] == 0) && (accelerometer != 0)){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");     
         imOK = false;
+        sendHistoric();
       }
       
-      else if(( gyroscope[0][loopSensors] >= 60 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] <= -6  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] <= 4)){
+      else if(( gyroscope[0] == 0 && gyroscope[1] >= 60 && gyroscope[2] == 0) && (accelerometer != 0)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA ESQUERDA");
         imOK = false;
+        sendHistoric();
       }
-      else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] >= 60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] >= 6 && accelerometer[2][loopSensors] <= 4)){
+      else if(( gyroscope[0] >= 50 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer != 0)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA FRENTE");
         imOK = false;
+        sendHistoric();
       }
-      else if(( gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] <= -60 && gyroscope[2][loopSensors] == 0) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] <= -6 && accelerometer[2][loopSensors] <= 4)){
+      else if(( gyroscope[0] <= -70 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer != 0)){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA TRÁS");
         imOK = false;
+        sendHistoric();
       }
-      else if( (gyroscope[0][loopSensors] >= 360 || gyroscope[0][loopSensors] <= -360 || gyroscope[1][loopSensors] >= 360 || gyroscope[1][loopSensors] <= -360 || gyroscope[2][loopSensors] >= 360 || gyroscope[2][loopSensors] <= -360) && (accelerometer[0][loopSensors] == 0  &&  accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] == -10 )){
-        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "CAPOTOU");
+      else if(accelerometer <= -0.786944 || accelerometer >= 0.944182){
+        enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "COLISÃO");
         imOK = false;
+        sendHistoric();
       }
-      else if(accelerometer[0][loopSensors] == 0 && accelerometer[1][loopSensors] == 0 && accelerometer[2][loopSensors] ==  10  && gyroscope[0][loopSensors] == 0 && gyroscope[1][loopSensors] == 0 && gyroscope[2][loopSensors] == 0){
+      else if(accelerometer == 0  && gyroscope[0] == 0 && gyroscope[1] == 0 && gyroscope[2] == 0){
         if(currentMillisAlarm == NULL){
             currentMillisAlarm = millis();
         }
         laterMillisAlarm = millis();
         if(laterMillisAlarm - currentMillisAlarm >= intervalAlarm){
-          ativarAlarm();    
-          Serial.println("Moto parada até o tempo limite, alarme ativado!");            
+          ativarAlarm();
+          Serial.println("Moto parada até o tempo limite, alarme ativado!");
         }
       }
       else{
@@ -243,36 +279,44 @@ void loop() {
   }
 
   if(imOK == false){
-      if(currentMillisImOK = NULL){
-        currentMillisImOK = millis();  
+      if(currentMillisImOK == NULL){
+        currentMillisImOK = millis();
       }
       laterMillisImOK = millis();
-      if(laterMillisImOK - currentMillisImOK >= intervalImOK){   
-          Serial.println("Usuário sofreu um acidente ou a moto foi assaltada!");  
+      if(laterMillisImOK - currentMillisImOK >= intervalImOK){
+          Serial.println("Usuário sofreu um acidente ou a moto foi furtada!");
           Serial.println("Notificando contatos...");  
           if(alarm == true){
-            enviarEvento(hour_, day(), month(), "ASSALTO", "OCORREU UM ASSALTO");        
+            enviarEvento(hour_, day(), month(), "FURTO", "MOTO FOI FURTADA");   
           }
           else{
             enviarEvento(hour_, day(), month(), "ACIDENTE", "OCORREU UM ACIDENTE");
           }
           imOK = true;
-      }    
+          currentMillisImOK = NULL;
+      }
   }
-  loopSensors++;
+  if(hour() == 0 && minute() == 0 && second() == 0){
+    File f = SPIFFS.open("/historic.txt", "w");
+    f.close();
+  }
   delay(300);
+
 }
 
-void ativarAlarm(){
-  digitalWrite(LED_BUILTIN, LOW);
-  Serial.println("Alarme ativado!");
-  alarm = true;
-}
-void desativarAlarm(){  
-  digitalWrite(LED_BUILTIN, HIGH);
-  Serial.println("Alarme desativado!");
-  currentMillisAlarm = NULL;
-  alarm = false;
+void sendHistoric(){
+  File f = SPIFFS.open("/historic.txt", "a");
+  if(!f)
+    Serial.println("Erro ao abrir o histórico");
+  else{
+    f.print(accelerometer);
+    f.print("\t");
+    f.print(gyroscope[0]);
+    f.print(",");
+    f.print(gyroscope[1]);
+    f.print(",");
+    f.println(gyroscope[2]);
+  }
 }
 /*
  * O procedimento que é chamada sempre que algum tópico assinado é atualizado
@@ -324,6 +368,25 @@ void callback(char * topic, byte * payload, unsigned int length){
   }
 }
 
+/*
+ * atualiza a variável de alarme para informar que o alarme foi ativado.
+ * 
+ */
+void ativarAlarm(){
+  digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("Alarme ativado!");
+  alarm = true;
+}
+
+/*
+ * Atualiza a variavel de alarme para informar que o alarme foi desativado.
+ */
+void desativarAlarm(){  
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("Alarme desativado!");
+  currentMillisAlarm = NULL;
+  alarm = false;
+}
 
 /*
  * Procedimento que realiza a conexão com o WiFi
@@ -340,10 +403,10 @@ void setupWifi(){
   //Mostra as informacoes do WiFi
   Serial.println();
   Serial.print("Conectando a ");
-  Serial.println(ssid);
+  Serial.println(USER_WIFI);
 
   //Inicia conexao com WiFi
-  WiFi.begin(ssid, password);
+  WiFi.begin(USER_WIFI, PASSWORD_WIFI);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(". ");
@@ -365,121 +428,6 @@ void setupWifi(){
   //apaga o led quando a conexao for bem sucedida:
   digitalWrite(LED_BUILTIN, HIGH);
 }
-
-/* 
- *  Procedimento que realiza a conexão da placa com o MQTT ( broker)
- *  
- */
-void reconnect(){
-  
-  //variavel para contagem de erros (se houver):
-  int contagem_erro = 0;
-  
-  //Fica em loop enquanto o cliente nao estiver conectado
-  while(!client.connected()){
-
-    //Informa:
-    digitalWrite(LED_BUILTIN, LOW);
-    Serial.print("TENTATIVA DE CONEXAO COM MQTT #");
-    Serial.print(contagem_erro);
-    Serial.println("...");
-
-    // se o cliente se conectar ao "ESPthing", a conexao eh bem sucedida 
-    if(client.connect("ESPthing")){
-      delay(1500);
-      digitalWrite(LED_BUILTIN, HIGH);
-      Serial.println("CONECTADO");
-      
-      //Faz a inscrição em tópicos:  
-      client.subscribe("INTERVALO_SITE_CONNECTION");
-      client.subscribe("INTERVALO_SITE_ALARM");
-      client.subscribe("SET_ALARM");
-    }
-    else{
-      
-      contagem_erro++;
-      char buf[256];
-      
-      //Captura o erro decorrente ta tentativa de conexao:
-      espClient.getLastSSLError(buf, 256);
-
-      //informa o erro:
-      Serial.print("WiFiClientSecure SSL error: ");
-      Serial.println(buf);
-
-      Serial.println("Aguarde 5 segundos para uma nova tentativa.");
-      delay(5000);
-    }
-  }
-}
-
-void loadSensors(){
-  //inicia o SPIFFS, ferramenta para acessar a memoria flash da placa para manipulacao de arquivos:
-  if(!SPIFFS.begin()){
-    //Se nao conseguir, avisa e da um return para o restante do código nao executar:
-    Serial.println("FALHA NO SETUP");
-    return;
-  }
-  
-  fA = SPIFFS.open("/accelerometer.txt", "r");
-  fG = SPIFFS.open("/gyroscope.txt", "r");
-  if(fA == NULL){
-    Serial.println("***ARQUIVOS NAO ENCONTRADOS!***");    
-  }
-  else{   
-    int j = 0;
-    int i = 0;
-    char* divLineA;
-    char* divLineG;
-    while(fA.available()){//fA e fG mesmo tamanho     
-      String lineFile = fA.readStringUntil('\n');
-      char lineA[lineFile.length()];    
-      strcpy(lineA, lineFile.c_str());
-
-      divLineA = strtok(lineA, ",");
-      accelerometer[i][j] = atoi(divLineA);
-      i++;
-      while(divLineA != NULL){
-        divLineA = strtok(NULL, ",");            
-        if(divLineA != NULL){
-          accelerometer[i][j] = atoi(divLineA); 
-          i++;
-          
-        }
-      }
-      i = 0;
-      j++;      
-    }
-    i = 0;
-    j = 0;
-    
-    while(fG.available()){
-      
-      String lineFile = fG.readStringUntil('\n');
-      char lineG[lineFile.length()];
-      strcpy(lineG, lineFile.c_str());
-      
-      divLineG = strtok(lineG, ",");
-      gyroscope[i][j] = atoi(divLineG);
-      i++;
-      while(divLineG != NULL){
-        divLineG = strtok(NULL, ",");         
-        if(divLineG!= NULL){
-          gyroscope[i][j] = atoi(divLineG);
-          i++;         
-        }
-      }
-      i = 0;
-      j++;
-    }
-
-  }
-  fA.close();
-  fG.close();
-
-  Serial.println("Sensores funcionando.");  
-}
-
 
 /*
  * Procedimento que faz a leitura dos certificados do AWS armazenados na memória da placa,
@@ -553,6 +501,53 @@ void carregarArquivos(){
   else
     Serial.println("Falha ao carregar o arquivo do AWS Root.");
 }
+/* 
+ *  Procedimento que realiza a conexão da placa com o MQTT ( broker)
+ *  
+ */
+void reconnect(){
+  
+  //variavel para contagem de erros (se houver):
+  int contagem_erro = 0;
+  
+  //Fica em loop enquanto o cliente nao estiver conectado
+  while(!client.connected()){
+
+    //Informa:
+    digitalWrite(LED_BUILTIN, LOW);
+    Serial.print("TENTATIVA DE CONEXAO COM MQTT #");
+    Serial.print(contagem_erro);
+    Serial.println("...");
+
+    // se o cliente se conectar ao "ESPthing", a conexao eh bem sucedida 
+    if(client.connect("ESPthing")){
+      delay(1500);
+      digitalWrite(LED_BUILTIN, HIGH);
+      Serial.println("CONECTADO");
+
+      //Faz a inscrição em tópicos:  
+      client.subscribe("INTERVALO_SITE_CONNECTION");
+      client.subscribe("INTERVALO_SITE_ALARM");
+      client.subscribe("SET_ALARM");
+    }
+    else{
+      
+      contagem_erro++;
+      char buf[256];
+      
+      //Captura o erro decorrente ta tentativa de conexao:
+      espClient.getLastSSLError(buf, 256);
+
+      //informa o erro:
+      Serial.print("WiFiClientSecure SSL error: ");
+      Serial.println(buf);
+
+      Serial.println("Aguarde 5 segundos para uma nova tentativa.");
+      delay(5000);
+    }
+  }
+}
+
 
 /*
  * Procedimento que faz a sincronização com o provedor.
@@ -620,12 +615,14 @@ void sendNTPpacket(IPAddress &address){
 }
 
 /*
- * Envia o Estado da lampada para a tabela do banco de dados MySQL estado
+ * Envia o Evento que ocorreu nos sensores para o banco de dados.
  * 
  * Parâmetros:
  *    hour_ -> hora do evento
  *    day_ -> dia do evento
- *    month_ ->
+ *    month_ -> mês do evento
+ *    name_ -> nome do evento
+ *    description -> descrição do evento
  *    
  */
 void enviarEvento(char * hour_ ,int day_, int month_, char * name_, char * description){
@@ -635,11 +632,19 @@ void enviarEvento(char * hour_ ,int day_, int month_, char * name_, char * descr
   MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
   //Executa a consulta (query):
   cur_mem->execute(query);
-  Serial.println(query);
   Serial.println("Evento enviado!");
   // deleta o cursor para liberar memória:
   delete cur_mem;
 }
+
+/*
+ * Envia informações de conexão da placa para o banco de dados
+ * 
+ * Parâmetros:
+ *    hour_ -> hora da conexão
+ *    interval -> intervalo de verificação em segundos
+ * 
+ */
 void sendConnection(char * hour_, int interval){
   //transforma os dados em um comando do MySQL:
   sprintf(query, UPDATE_SQL_CONNECTION, hour_, interval);
@@ -647,7 +652,6 @@ void sendConnection(char * hour_, int interval){
   MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
   //Executa a consulta (query):
   cur_mem->execute(query);
-  Serial.println(query);
   Serial.println("Estado da conexão enviado!");
   // deleta o cursor para liberar memória:
   delete cur_mem;

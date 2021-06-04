@@ -19,6 +19,8 @@
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 
+
+#include <math.h>
 /********************************************************************/
 /*****VARIAVEIS E CONSTANTES DEFINIDAS PARA A CAPTURA DO 'TIMESTAMP'***/
 /********************************************************************/
@@ -81,7 +83,7 @@ WiFiClient clientSQL;
 MySQL_Connection conn((Client*) &clientSQL);
 
 //Matrizes para capturar os dados dos arquivos de dados de rotina:
-float accelerometer = 0;
+float accelerometer[3];
 float gyroscope[3];
 
 //Variaveis para intervalo de conexão:
@@ -145,9 +147,9 @@ void setup() {
   
   //captura o primeiro milli de inicialização da placa.
   laterMillis = millis();
-
   File f = SPIFFS.open("/historic.txt", "w");
   f.close();
+  
 }
 
 void loop() {
@@ -196,73 +198,62 @@ void loop() {
   sprintf(hour_, "%d:%d", hour(), minute());
   
   if(Serial.available()){
-    accelerometer = 0;
     readTrue = true;
     int dado[6];
     int i = 0;
-    int buff = 0;
     while(Serial.available()){
-      dado[i] = Serial.read();
-      buff = Serial.read();
-      if(buff != 44){
-        if(buff != 10){
-          dado[i] = dado[i] + buff;
-          buff = Serial.read();
-        }
+      if(i<3){
+        accelerometer[i] = ((Serial.read() - 127)*0.015625);
+        Serial.println(accelerometer[i]);
+      }
+      else{
+        gyroscope[i-3] = (Serial.read() - 127)*1.953125;
+        Serial.println(gyroscope[i-3]);
       }
       i++;
-    }
-    for(i = 0; i<6; i++){
-      if(i<3)
-        accelerometer = accelerometer + ((dado[i] - 127)*0.015625);
-      else
-        gyroscope[i-3] = (dado[i] - 127)*1.953125;
-      Serial.print(dado[i]);
-      Serial.print(" ");
     }
   }
   else{
     readTrue = false;
   }
-  Serial.println("");
   
     
   if(readTrue && imOK){
     if(alarm == true){
-      if(accelerometer != 0 || gyroscope[0] != 0 || gyroscope[1] != 0 || gyroscope[2] != 0){//verifica o acelerômetro em X,Y,Z
+      if(accelerometer[0] != 0 || gyroscope[0] != 0 || gyroscope[1] != 0 || gyroscope[2] != 0){//verifica o acelerômetro em X,Y,Z
         enviarEvento(hour_, day(), month(), "POSSIVEL FURTO", "A moto pode estar sendo roubada!!");
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL FURTO");
       }
     }
     else{//alarme não ativado, segue rotina normal, em movimento.
-      if((gyroscope[0] == 0 && gyroscope[1] <= -60 && gyroscope[2] == 0) && (accelerometer != 0)){
+      if((gyroscope[0] == 0 && gyroscope[1] <= -60 && gyroscope[2] == 0) && (accelerometer[0] != 0)){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA DIRETA");     
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL ACIDENTE - TOMBOU PARA A DIREITA");
       }
       
-      else if(( gyroscope[0] == 0 && gyroscope[1] >= 60 && gyroscope[2] == 0) && (accelerometer != 0)){
+      else if(( gyroscope[0] == 0 && gyroscope[1] >= 60 && gyroscope[2] == 0) && (accelerometer[0] != 0)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA ESQUERDA");
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL ACIDENTE - TOMBOU PARA ESQUERDA");
       }
-      else if(( gyroscope[0] >= 50 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer != 0)){
+      else if(( gyroscope[0] >= 50 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer[0] != 0)){
         enviarEvento(hour_, day(), month(),  "POSSIVEL ACIDENTE", "TOMBOU PARA FRENTE");
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL ACIDENTE - TOMBOU PARA FRENTE");
       }
-      else if(( gyroscope[0] <= -70 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer != 0)){
+      else if(( gyroscope[0] <= -70 && gyroscope[1] == 0 && gyroscope[2] == 0) && (accelerometer[0] != 0)){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "TOMBOU PARA TRÁS");
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL ACIDENTE - TOMBOU PARA TRÁS");
       }
-      else if(accelerometer <= -0.786944 || accelerometer >= 0.944182){
+      else if(accelerometer[0] <= -0.786944 || accelerometer[0] >= 0.944182){
         enviarEvento(hour_, day(), month(), "POSSIVEL ACIDENTE", "COLISÃO");
         imOK = false;
-        sendHistoric();
+        sendHistoric("POSSIVEL ACIDENTE - COLISÃO");
       }
-      else if(accelerometer == 0  && gyroscope[0] == 0 && gyroscope[1] == 0 && gyroscope[2] == 0){
+      else if(accelerometer[0] == 0  && gyroscope[0] == 0 && gyroscope[1] == 0 && gyroscope[2] == 0){
         if(currentMillisAlarm == NULL){
             currentMillisAlarm = millis();
         }
@@ -296,26 +287,103 @@ void loop() {
           currentMillisImOK = NULL;
       }
   }
-  if(hour() == 0 && minute() == 0 && second() == 0){
-    File f = SPIFFS.open("/historic.txt", "w");
-    f.close();
-  }
+  
   delay(300);
 
 }
 
-void sendHistoric(){
-  File f = SPIFFS.open("/historic.txt", "a");
+void sendHistoric(char * description){
+  File f = SPIFFS.open("/historic.txt", "r"); //day,hour:minute:second\tvalores\tdescrição\n
+  if(f == NULL)
+    f = SPIFFS.open("/historic.txt", "w");
+  else{
+    int data[4];
+    String firstLine = f.readStringUntil('\n');
+    if(firstLine != NULL){
+      char firstLineChar[firstLine.length()];
+      Serial.println("antes do strcpy");
+      strcpy(firstLineChar, firstLine.c_str());
+      Serial.println(firstLineChar);
+      int dia = atoi(strtok(firstLineChar, ","));
+      Serial.println(dia);
+      int hora = atoi(strtok(NULL, ":"));
+      Serial.println(hora);
+      int minuto = atoi(strtok(NULL, ":"));
+      Serial.println(minuto);
+      
+      if(dia != day()){
+        File faux = SPIFFS.open("/aux.txt","w");
+        
+        if(hora < hour()){
+          while(f.available()){
+            faux.println(f.readStringUntil('\n'));
+          }
+          f.close();
+  
+          faux.close();
+  
+          faux = SPIFFS.open("/aux.txt", "r");
+          
+          f = SPIFFS.open("/historic.txt", "w");
+    
+          while(faux.available()){
+            f.println(faux.readStringUntil('\n'));
+          }
+          
+          f.close();
+          faux.close();
+          
+        }
+        else if(hora == hour()){
+          if( minuto <= minute()){
+            while(f.available()){
+              faux.print(f.readStringUntil('\n'));
+            }
+            f.close();
+    
+            faux.close();
+    
+            faux = SPIFFS.open("/aux.txt", "r");
+            
+            f = SPIFFS.open("/historic.txt", "w");
+      
+            while(faux.available()){
+              f.print(faux.readStringUntil('\n'));
+            }
+            
+            f.close();
+            faux.close();
+          }
+        }
+      }
+    }
+  }
+
+
+  f = SPIFFS.open("/historic.txt","a");
   if(!f)
     Serial.println("Erro ao abrir o histórico");
   else{
-    f.print(accelerometer);
+    f.print(day());
+    f.print(",");
+    f.print(hour());
+    f.print(":");
+    f.print(minute());
     f.print("\t");
+    f.print(accelerometer[0]);
+    f.print(",");
+    f.print(accelerometer[1]);
+    f.print(",");
+    f.print(accelerometer[2]);
+    f.print(",");
     f.print(gyroscope[0]);
     f.print(",");
     f.print(gyroscope[1]);
     f.print(",");
-    f.println(gyroscope[2]);
+    f.print(gyroscope[2]);
+    f.print("\t");
+    f.println(description);
+    f.close();
   }
 }
 /*

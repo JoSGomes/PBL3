@@ -80,5 +80,5 @@ A NodeMCU possui algumas funcionalidades com o botão *"FLASH"*, que permite que
 
 Esse botão é responsável por ativar o modo alarme manualmente, ao pressioná-lo a LED na placa irá acender, o que significa que o alarme está ativado, pressioná-lo novamente desliga o modo alarme e a LED é apagada.
 
-Por ela guardar o histórico de possíveis acidentes, acidentes, de fato, e furtos durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um software, conecte a placa ao computador e utilize um monitor serial, como foi visto no  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> que você pode consultar para realizar essa configuração se ainda não fez.
+Por ela guardar o histórico de possíveis acidentes, acidentes, de fato, e furtos durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um monitor serial e conecte a placa ao computador, como foi visto no  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> que você pode consultar para realizar essa configuração se ainda não fez.
 

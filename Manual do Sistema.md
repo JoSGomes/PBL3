@@ -47,7 +47,7 @@ Execute-os no terminal do SO.
 
 O serviço ***RDS*** foi utilizado para criar uma base de dados para o aplicativo afim de fazer o controles dos dados trocados entre -
 
-<img src = "[desktop1.jpg](https://github.com/JoSGomes/PBL3/blob/main/desktop1.jpg)">
+[desktop1.jpg](https://github.com/JoSGomes/PBL3/blob/main/desktop1.jpg)
 
 
 

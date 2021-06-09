@@ -46,7 +46,7 @@ Execute-os no terminal do SO.
 ### RDS - Relational Database Services
 
 O serviço ***RDS*** foi utilizado para criar uma base de dados para o aplicativo afim de fazer o controles dos dados trocados entre -
-<img src = "desktop1.jpg">
+<img src = "/img/desktop1.jpg">
 
 
 

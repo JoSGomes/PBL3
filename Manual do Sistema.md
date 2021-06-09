@@ -45,12 +45,7 @@ Execute-os no terminal do SO.
 
 ### RDS - Relational Database Services
 
-<<<<<<< Updated upstream
-O serviço ***RDS*** foi utilizado para criar uma base de dados para o aplicativo afim de fazer o controles dos dados trocados entre -
-<img src = "/img/desktop1.jpg">
-=======
 O serviço ***RDS*** foi utilizado para criar uma base de dados para o aplicativo afim de fazer o controles dos dados trocados entre os dispositivos (*website*, *placa* e *Alexa*). Para a presente aplicação o banco de dados já se encontra configurado e pronto para uso sem necessidade do usuário fazer configurações adicionais. O banco de dados escolhido foi o *MySQL*.
->>>>>>> Stashed changes
 
 Para acessar esse recurso e visualizar os dados, além também de poder alterar algo de acordo a sua preferência é possível usar o software *MySQL Workbench* com as seguintes credenciais: 
 

@@ -56,7 +56,7 @@ No menu do site existe uma opção chamada cadastro de contatos, ao clicar nessa
 
 ### Tabela de Eventos
 
-No menu do site existe uma opção chamada tabela de eventos, ao clicar o usuário será redirecionado a página da tabela de evento, onde existe um filtro de dia e mês, onde o usuário pode consultar eventos que aconteceram em determinado dia. Estes eventos são os que a placa NODEMCU reporta
+No menu do site existe uma opção chamada tabela de eventos, ao clicar o usuário será redirecionado a página da tabela de evento, onde existe um filtro de dia e mês, onde o usuário pode consultar eventos que aconteceram em determinado dia. Estes eventos são os que a placa NodeMCU reporta
 
 ### Configurações
 
@@ -65,3 +65,5 @@ No menu do site existe uma opção chamada Configurações, ao clicar o usuário
 - Tempo de verificação de conexão
 - Tempo de acionamento de alarme
 - Tempo de 'Estou Bem'
+
+O tempo de verificação de conexão é o intervalo de tempo que o site testará a conexão com a Placa NodeMCU. O tempo de acionamento de alarme é o tempo, em que a placa, ao não receber nenhuma alteração nos sensores, acionará automaticamente o modo alarme. O tempo de 'Estou Bem' diz respeito ao tempo de tolerância que a NodeMCU terá, do momento que detectar um possível acidente ao momento de ligação dos contatos de emergência, vale lembrar que se o botão da placa for pressionado nesse intervalo de tolerância a placa não irá fazer a ligação para os contatos de emergência. 

@@ -50,3 +50,18 @@ Entrando no *Website* na página inicial é possível ver os contatos de emergê
 
 Na tela inicial, há o botão "Alarme" Esse botão tem a funcionalidade de que, se for clicado, irá ativar o modo alarme da NodeMCU.
 
+### Cadastro de contatos
+
+No menu do site existe uma opção chamada cadastro de contatos, ao clicar nessa opção é possível adicionar um contato à lista de contatos de emergência que é exibida na tela inicial do site
+
+### Tabela de Eventos
+
+No menu do site existe uma opção chamada tabela de eventos, ao clicar o usuário será redirecionado a página da tabela de evento, onde existe um filtro de dia e mês, onde o usuário pode consultar eventos que aconteceram em determinado dia. Estes eventos são os que a placa NODEMCU reporta
+
+### Configurações
+
+No menu do site existe uma opção chamada Configurações, ao clicar o usuário será redirecionado a uma página de configurações, onde o mesmo poderá alterar alguns intervalos da placa:
+
+- Tempo de verificação de conexão
+- Tempo de acionamento de alarme
+- Tempo de 'Estou Bem'

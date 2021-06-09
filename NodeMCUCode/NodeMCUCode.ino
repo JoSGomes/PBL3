@@ -169,7 +169,6 @@ void loop() {
   if(!digitalRead(BUTTON)){
     //Verifica o estado da lâmpada:
     if(!digitalRead(LED_BUILTIN) && imOK){
-      digitalWrite(LED_BUILTIN, HIGH);
       desativarAlarm();
     }
     else if(imOK){

@@ -16,7 +16,7 @@ Após isso, tudo está pronto para começar a utilizar o sistema!
 
 ## Funcionalidades da Alexa
 
-A Alexa cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultar, alterar os intervalos de envio pela placa se está conectada, o intervalo para que o alarme seja ativado, caso a moto esteja parada, e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
+A Alexa cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultar, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado, caso a motocicleta esteja parada, e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
 
 Para começar, é necessário abrir a *skill*  na Alexa, para isso, fale ``abrir dispositivo para motos`` , desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
 
@@ -41,4 +41,12 @@ Para alterar os intervalos da NodeMCU é necessário falar alguma das frases a s
 - Conexão para **I** minutos alarme para **J** e **K** minutos
 
 Ao falar quaisquer das frases acima, a Alexa irá alterar os intervalos para os tempos que foram ditos.
+
+## Funcionalidades do Website
+
+Entrando no *Website* na página inicial é possível ver os contatos de emergência que foram adicionados e a informação se o dispositivo está conectado.
+
+### Botão "Alarme"
+
+Na tela inicial, há o botão "Alarme" Esse botão tem a funcionalidade de que, se for clicado, irá ativar o modo alarme da NodeMCU.
 

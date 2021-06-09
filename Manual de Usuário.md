@@ -74,7 +74,7 @@ No menu do site existe uma opção chamada Configurações, ao clicar o usuário
 
 ## Funcionalidades da placa NodeMCU
 
-A NodeMCU possui algumas funcionalidades com o botão *"FLASH"*, que permite que você tenha manual com ela.
+A NodeMCU possui algumas funcionalidades com o botão *"FLASH"*, que permite que você tenha acesso manual a ela.
 
 ### Botão "FLASH" 
 

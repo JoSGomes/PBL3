@@ -62,11 +62,11 @@ No menu do site existe uma opção chamada cadastro de contatos, ao clicar nessa
 
 ### Tabela de Eventos
 
-No menu do site existe uma opção chamada tabela de eventos, ao clicar o usuário será redirecionado a página da tabela de evento, onde existe um filtro de dia e mês, onde o usuário pode consultar eventos que aconteceram em determinado dia. Estes eventos são os que a placa NodeMCU reporta.
+No menu do site existe uma opção chamada tabela de eventos, ao clicar o usuário será redirecionado a página da tabela de evento, onde existe um filtro de dia e mês, onde o poderá consultar eventos que aconteceram em determinado dia. Estes eventos são os que a placa NodeMCU reporta.
 
 ### Configurações
 
-No menu do site existe uma opção chamada Configurações, ao clicar o usuário será redirecionado a uma página de configurações, onde o mesmo poderá alterar alguns intervalos da placa:
+No menu do site existe uma opção chamada Configurações, ao clicar o você será redirecionado a uma página de configurações, onde poderá alterar alguns  intervalos de tempos da placa:
 
 - Tempo de verificação de conexão
 - Tempo de acionamento de alarme

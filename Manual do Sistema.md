@@ -1,4 +1,4 @@
 # Manual do Sistema
 
-Nesse 
+Nesse manual será explicado como o usuário deve fazer a integração das ferramentas 
 

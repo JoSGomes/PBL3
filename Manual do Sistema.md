@@ -60,5 +60,29 @@ Para acessar esse recurso e visualizar os dados, além também de poder alterar 
 
 O aplicativo tem a possibilidade de conexão com a ***Alexa***, a assistente virtual da Amazon. Através da ***Alexa*** você pode fazer algumas funcionalidades do aplicativo - funcionalidades essas que serão descritas no <a href = "https://github.com/JoSGomes/PBL3/blob/main/Manual%20de%20Usu%C3%A1rio.md">Manual do Usuário</a>.
 
-As funcionalidades são feitas a partir de *"Skills"* que podem ser feitas por qualquer um a partir do site https://developer.amazon.com/alexa/console/ask
+As funcionalidades são feitas a partir de *"Skills"* que podem ser feitas por qualquer um a partir do site https://developer.amazon.com/alexa/console/ask.  Após entrar nesse site você visualiza facilmente o botão *"create skill"*. Clique nele para ser direcionado ao menu de criação.
+
+### Criando uma *Skill*
+
+Quando entrar no menu de criação escolha um nome para sua *Skill*, a linguagem, o modelo e também a linguagem de programação que deseja usar. É recomendado utilizar o idioma português e o modelo personalizado para que você faça do seu jeito! Após escolher clique em *"create skill"* - ou criar habilidade, em português.
+
+Após isso, você verá duas opções de modelo para começar a criar a sua *skill* - você pode escolher. Depois de escolher selecione o botão *"create with template"* e você será direcionado ao painel de criação da *skill*.
+
+### Definindo *Invocation* e uma *Intent*
+
+No painel de criação, no menu lateral esquerdo navegue para *Invocation* e defina como deseja invocar a sua *skill* com a ***Alexa***. Após escolher a sua *"skill invocation name"*, clique em *"save model"* e em seguida em *"build model"*.
+
+Novamente no menu lateral esquerdo navegue para *Interaction Model/Intents* e crie uma nova *"intent"* clicando no botão *"Add Intent"*. Escolha um nome e clique em *"create custom intent"*. Pronto, sua *"intent"* foi criada. Ela será uma interação que você terá com a ***Alexa***. Após criá-la, você será direcionado ao painel de edição da *"intent"* onde você poderá escolher formas de invocá-la. Você também pode adicionar variáveis na invocação para capturar dados utilizando esse formato: ``{variavel}``. Após criar a *"intent"* e as suas invocações, clique em *"save model"* e em seguida em *"build model"*.
+
+*Sua invocation e intent foram criadas, agora vamos para o próximo passo!*
+
+### Codificando
+
+Na aba *code* você encontrará o código referente a sua *skill*. É aí que você faz as suas preferências. Quando você utiliza a invocação da *skill* criada a ***Alexa*** executa função ``handle`` da *class* ``LaunchRequestHandler(...)``. Se você quiser alterar o texto de inicio, basta alterar o valor da variável ``speak_output``.
+
+Agora a parte mais importante. Para que seja possível utilizar a *"intent"* criada, você deve fazer uma *class* com ``"nome da sua intent"``+``Handle``, no mesmo padrão das outras *class* presentes no código - pode copiar e colar, o que vai alterar é que na função ``can_handle`` é necessário mudar o parâmetro da função que é retornada para o nome da sua *"intent"*. Dentro da função ``handle``, enfim, faça o que deseja fazer com a sua *skill*.
+
+Após fazer todas essas configurações, no fim do código coloque ``sb.add_request_handler("nome da sua class")`` logo abaixo de ``sb = SkillBuilder()``.
+
+Com isso, dê um *"save"* e *"deploy"*. Pronto, *skill* criada com sucesso! Você pode testar pela aba *"Test"*.
 

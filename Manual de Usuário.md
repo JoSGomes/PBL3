@@ -71,3 +71,5 @@ No menu do site existe uma opção chamada Configurações, ao clicar o usuário
 - Tempo de verificação de conexão
 - Tempo de acionamento de alarme
 - Tempo de 'Estou Bem'
+
+## Funcionalidades da NodeMCU

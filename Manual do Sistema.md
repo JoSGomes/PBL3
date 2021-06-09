@@ -5,7 +5,7 @@ Nesse manual será explicado como o usuário deve fazer a integração das ferra
 
 ## Amazon Web Service - AWS
 
-Uma das ferramentas utilizada para o desenvolvimento do ***Dispositivo Para Motos*** é o ***AWS***, um sistema de serviços web da Amazon, que disponibiliza vários recursos em nuvem para desenvolvimento de aplicações. Dentre os recursos disponibilizados, os utilizados para essa aplicação *- e que você, usuário, deve configurar -* foram o *IoT Core*, recurso que disponibiliza um servidor para comunicações MQTT, e o *RDS*, recurso que disponibiliza um sistema de banco de dados relacional.
+Uma das ferramentas utilizada para o desenvolvimento do ***Dispositivo Para Motos*** é o ***AWS***, um sistema de serviços web da Amazon, que disponibiliza vários recursos em nuvem para desenvolvimento de aplicações. Dentre os recursos disponibilizados, os utilizados para essa aplicação *- e que você, usuário, deve configurar -* foram o ***IoT Core***, recurso que disponibiliza um servidor para comunicações MQTT, e o ***RDS***, recurso que disponibiliza um sistema de banco de dados relacional.
 
 Sem mais conversas, vamos *"por a mão na massa"*!
 
@@ -44,4 +44,8 @@ Para a conversão é recomendado fazer a utilização do software *OpenSSL* faze
 Execute-os no terminal do SO.
 
 ### RDS - Relational Database Services
+
+O serviço ***RDS*** foi utilizado para criar uma base de dados para o aplicativo afim de fazer o controles dos dados trocados entre -
+
+<img src = "[desktop1.jpg](https://github.com/JoSGomes/PBL3/blob/main/desktop1.jpg)">
 

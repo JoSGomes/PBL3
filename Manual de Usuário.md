@@ -41,7 +41,9 @@ Para alterar os intervalos da NodeMCU é necessário falar alguma das frases a s
 - Conexão para **I** minutos alarme para **J** e **K** minutos
 
 O tempo de conexão é o intervalo de tempo que o site testará a conexão com a Placa NodeMCU.
-O tempo de alarme é o tempo, em que a placa, ao não receber nenhuma alteração nos sensores, acionará automaticamente o modo alarme. 
+
+O tempo de alarme é o tempo, em que a placa, ao não receber nenhuma alteração nos sensores, acionará automaticamente o modo alarme.
+
 O tempo de 'Estou Bem' diz respeito ao tempo de tolerância que a NodeMCU terá, do momento que detectar um possível acidente ao momento de ligação dos contatos de emergência, vale lembrar que se o botão da placa for pressionado nesse intervalo de tolerância a placa não irá fazer a ligação para os contatos de emergência. 
 
 Ao falar quaisquer das frases acima, a Alexa irá alterar os intervalos para os tempos que foram ditos.

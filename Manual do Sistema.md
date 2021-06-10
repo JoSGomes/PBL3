@@ -147,4 +147,29 @@ A *NodeMCU* fará o uso dos arquivos de certificado baixados e convertidos anter
 
 ### Credenciais de acesso na *NodeMCU*
 
-Algumas credencias devem ser adicionadas para que a NodeMCU faça a conexão correta com o *WiFi* local e com o banco de dados também
+Algumas credencias devem ser adicionadas para que a NodeMCU faça a conexão correta com o *WiFi* local e com o banco de dados também. Essas credencias são adicionadas à arquivos ``.h`` que estão presentes na pasta ``NodeMCUCode``.
+
+Para adicionar as credenciais a este arquivo basta que o código ``NodeMCUCode.ino`` seja aberto na *IDE* do *Arduino* que as abas com os arquivos ``.h`` já estarão presentes lá.
+
+Em ``arduino_secrets.h`` adicione as seguintes credenciais do banco de dados:
+
+- **SECRET_USERDB**: *"admin"*
+- **SECRET_PASSDB**:  *"password"*
+
+Em ``credenciais.h`` adicione as seguintes credenciais do *WiFi* local e também da sua *Thing* do ***AWS***.
+
+- **USER_WIFI**: *"nome do seu WiFi"*
+- **PASSWORD_WIFI**: *"senha do seu WiFi"*
+- **ENDPOINT_AWS**: *"endpoint da sua Thing"*
+
+> **OBS:** o endpoint pode ser encontrado indo ao painel do ***IoT Core*** no ***AWS***, no final do menu lateral esquerdo em *settings*. Assim que abrir o menu *Settings* você verá o *endpoint*.
+
+### Bibliotecas necessárias para *NodeMCU*
+
+Para que seja possível carregar as instruções de execução na placa, primeiramente é necessário integrar algumas bibliotecas ao seu arduino. As bibliotecas necessárias são as  pastas presentes na pasta ``lib_nodeMCU.zip``. Após a localização dessa pasta, extraia seu conteúdo e copie as pastas dentro e cole no diretório do *Sketchbook* do *Arduino IDE* na pasta com nome de ``libaries`` (geralmente em *Documentos\Arduino\libraries*).
+
+###  Carregar código à placa NodeMCU
+
+Por fim, após realizar todos esses passos vocês está pronto para carregar o código em sua placa *NodeMCU*. Com sua placa conectada ao computador, abra na *Arduino IDE* o arquivo ``NodeMCUCode.ino`` (presente na pasta de mesmo nome) e clique no ícone de seta no canto superior esquerdo para carregar o código em sua placa. Espere todo o processo, e pronto, ***sua placa está configurada para uso!***
+
+## Website

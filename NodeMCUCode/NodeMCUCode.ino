@@ -305,11 +305,12 @@ void loop() {
       }
   }
   
+  verifyHistoric();
+  
   delay(300);
-
 }
 
-void sendHistoric(char * description){
+void verifyHistoric(){
   File f = SPIFFS.open("/historic.txt", "r");
   if(f == NULL)
     f = SPIFFS.open("/historic.txt", "w");
@@ -372,7 +373,9 @@ void sendHistoric(char * description){
       }
     }
   }
-  
+}
+
+void sendHistoric(char * description){
   f = SPIFFS.open("/historic.txt","a");
   if(!f)
     Serial.println("Erro ao abrir o histórico");

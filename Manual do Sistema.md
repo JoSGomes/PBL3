@@ -209,7 +209,7 @@ Abra o arquivo ``.env`` e vá ao final do mesmo e você verá várias variáveis
 
 Salve o arquivo.
 
-# Pronto!
+# Finalizando...
 
 Após todo esse processo seu site está pronto para uso! Basta apenas você executar o comando ``php artisan serve`` no terminal na pasta ``IoTwebSite`` e abrir no navegador com o endereço *IP* passado pelo *Laravel* ou utilizar *localhost:8000*.
 Existe também a possibilidade da utilização do serviço *Elastic Beanstalk* do *AWS* para hospedar o site na nuvem. 
@@ -239,7 +239,19 @@ Após fazer o *upload* do arquivo do site, navegue no menu lateral para *"config
 
 Pronto, tudo já foi configurado. Volte agora para a página de edição da aplicação e abra o link fornecido pelo ***Elastic Beanstalk***. Por esse link qualquer pessoa pode acessar seu site.
 
-##### Desfrute da aplicação ***Dispositivos para Motos:two_hearts::two_hearts:***
+## Monitor Serial
 
-##### A Equipe de Desenvolvimento agradece :clap::clap::clap::clap:
+Uma das funcionalidades do produto ***Dispositivos para Motos*** é guarda um histórico de eventos das ultimas 24 horas e para que seja possível visualizar esse histórico você precisa abrir o monitor serial. Na própria ***IDE*** do **Arduino** é possível fazer isso:
+
+- Vá ao canto superior direito e clique no ícone de lupa
+
+Isso abrirá o monitor. Veja se as configurações de de velocidade na parte inferior do monitor estão configuradas para a velocidade ``115200``.
+
+para saber como utilizar essa função, vide o <a href="[https://github.com/JoSGomes/PBL3/blob/main/Manual%20de%20Usu%C3%A1rio.md](https://github.com/JoSGomes/PBL3/blob/main/Manual de Usuário.md)">Manual do Usuário</a>.
+
+# Tudo certo!
+
+#### Desfrute da aplicação ***Dispositivos para Motos:two_hearts::two_hearts:***
+
+#### A Equipe de Desenvolvimento agradece :clap::clap::clap::clap:
 

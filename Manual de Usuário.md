@@ -11,7 +11,7 @@ Após ter tudo pronto e configurado, conecte a placa a energia e espere que a LE
 
 > **OBS**: Caso o site esteja hospedado localmente, vá ao terminal, que deve estar aberto na pasta raiz do Website, digite ``php artisan serve`` , vá ao navegado e digite o link ``localhost:8080``. Entretanto, se estiver hospedado no próprio serviço do *AWS* *Elastic Beanstalk*, abra o *Website* utilizando o link disponibilizado pelo serviço.
 
- Por último, você irá precisar da *skill* da ***Alexa*** na sua conta para testar e, se quiser, também poderá testar no seu celular ou no seu *Echo Dot*, basta que um dos dois dispositivos estejam logados na conta em que a *skill* está implementada. Caso ainda não tenha a skill na sua conta, vá até o <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***" e faça o passo-a-passo.
+ Por último, você irá precisar da *skill* da ***Alexa*** na sua conta para testar e, se quiser, também poderá testar no seu celular ou no seu *Echo Dot*, basta que um dos dois dispositivos estejam logados na conta em que a *skill* está implementada. Caso ainda não tenha a skill na sua conta, vá até o Manual de Sistema no tópico <a href= "https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md#alexa">***Alexa***</a> e faça o passo-a-passo.
 
 ## Sobre o estado de conexão e os Intervalos
 
@@ -25,7 +25,7 @@ O tempo de 'Estou Bem' diz respeito ao tempo de tolerância que a NodeMCU terá,
 
 A ***Alexa*** cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultá-lo, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
 
-Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você estava configurando a *skill* no passo a passo do <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***", desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
+Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você estava configurando a *skill* no passo a passo do Manual de Sistema no tópico <a href= "https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md#alexa">***Alexa***</a>, desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
 
 > OBS: Após invocar a skill e fazer uma solicitação à ***Alexa***, é necessário que invoque-a novamente para outra solicitação nesta implementação.
 
@@ -90,7 +90,7 @@ Quando a LED está desligada o modo acidente está a todo momento ativo, ou seja
 
 ### Histórico
 
-Por ela guardar o histórico de possíveis acidentes, acidentes confirmados, possíveis furtos e furtos confirmados durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um monitor serial e conecte a placa ao computador, como foi visto no  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> que você pode consultar para realizar essa configuração se ainda não fez.
+Por ela guardar o histórico de possíveis acidentes, acidentes confirmados, possíveis furtos e furtos confirmados durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um monitor serial e conecte a placa ao computador, como foi visto no Manual de Sistema que você pode consultar para realizar essa configuração no tópico  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md#monitor-serial">Monitor Serial</a>.
 
 A forma para o histórico ser mostrado para você é pelo monitor serial, para isso, basta que pressione o botão "FLASH" por 3 segundos, assim todo o histórico das últimas 24 horas que reside na placa será mostrado para você.
 

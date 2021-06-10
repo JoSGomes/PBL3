@@ -3,5 +3,3 @@
 *.crt
 *.key
 *.der
-NodeMCUCode/credenciais.h
-NodeMCUCode/arduino_secrets.h

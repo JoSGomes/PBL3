@@ -93,11 +93,58 @@ No *console*, no menu lateral, vá até *Invocation*. No campo *"Skill Invocatio
 
 ### Importando bibliotecas 
 
-Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``Bibliotecas necessárias``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
+Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``Bibliotecas necessárias.zip``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
 
+Na aba *code*, selecione no menu superior a opção *"Import Code"*, escolha a pasta *zipada* ``Bibliotecas necessárias.zip`` e importe as pastas presentes nela. Após importar todas as pastas, clique em *Deploy* no canto superior direito e espere o processo terminar.
 
+> **OBS:** A opção *"Import Code"* só suporta 100 arquivos por vez, então será necessário importar uma pasta por vez.
 
-### A *skill* da aplicação
+Após terminar o processo a sua skill está pronta para uso na sua conta! Você poderá fazer o teste dela na Aba *Test*, digitando "abrir " seguido da invocação que você escolheu para a *skill*.
 
-Juntamente com os arquivos baixados do repositório está o código da *skill* criada para utilização na aplicação em linguagem *"Python"* e, é possível fazer a importação da aplicação para uma skill que você está criando.
+## A placa *NodeMCU*
 
+A placa ***NodeMCU*** é a responsável por verificar se aconteceu um acidente ou não na moto. Ela deve ficar na moto afim de capturar as informações de movimentação e verificar se está tudo bem.
+
+Para que ela consiga fazer essas verificações, algumas configurações básicas são necessárias. A seguir será explicado o passo a passo para poder configurar com sucesso a sua placa ***NodeMCU***
+
+### Conectar *NodeMCU* ao computador
+
+Para poder configurar a placa com as instruções de execução, é necessário conectá-la ao computador por meio de um cabo *microUSB*. A seguir está o passo a passo de como deve ser feita essa conexão:
+
+-  Instale a IDE do arduino: *Arduino IDE*;
+
+> Você pode encontrá-la no site oficial da *Arduino*: https://www.arduino.cc/en/software ;
+
+-  Conecte sua placa ao computador com um cabo USB e verifique se o seu drive de *USB-Serial CH340* está instalado. Se não, instale-o, será necessário para reconhecer a placa;
+
+-  Abra sua *Arduino IDE* e navegue na barra de menu até *"Ferramentas/Placa/Gerenciar Placas"* e procure por *esp8266* e instale a versão mais recente;
+
+-  Agora navegue no menu novamente até *"Ferramentas/Placa/ESP8266 boards*" e escolha a placa *NodeMCU 1.0(ESP-12E module)*;
+
+-  Selecione a porta COM a qual sua placa está conectada em *"Ferramentas/Porta"*. Feche a *Arduino IDE*. 
+
+Pronto, sua placa está conectada!
+
+### Integração dos arquivos de certificado
+
+A *NodeMCU* fará o uso dos arquivos de certificado baixados e convertidos anteriormente, que, como já foi dito serão três. Para integrar esses arquivos com a ***NodeMCU***, é preciso colocá-los na memória interna da placa. Para tal, siga o passo a passo a seguir:
+
+-  Transfira os arquivos convertidos, ``private.der``, ``cert.der`` e ``ca.der``, para a pasta *data* que se encontra no diretório onde está o arquivo ``NodeMCUCode.ino`` ( presente na pasta de mesmo nome). Deixe-os lá;
+
+>**OBS:** Caso não tenha pasta *data* nesse diretório, crie-a.
+
+-  Vá até a pasta onde se encontram todos os arquivos (a pasta raiz do repositório) e procure por uma pasta *zipada* com nome de ``ESP8266FS-0.5.0.zip`` e extraia o conteúdo. Deixe-o lá;
+
+-  Abra o *Arduino IDE* e navegue na barra de menu até *Arquivo/Preferências* e veja qual o diretório da sua pasta de *SketchBook*. Navegue até essa pasta (normalmente fica em documentos);
+
+-  Chegando na pasta de *SketchBook* crie uma pasta com nome de ``tools`` e coloque a pasta que foi extraída no segundo passo;
+
+-  Feche e abra sua *Arduino IDE*;
+
+-  Navegue na barra de menu até *Ferramentas* e selecione ``ESP8266 Sketch data upload``;
+
+-  Espere o Upload. Pronto, os arquivos já foram carregados na placa.
+
+### Credenciais de acesso na *NodeMCU*
+
+Algumas credencias devem ser adicionadas para que a NodeMCU faça a conexão correta com o *WiFi* local e com o banco de dados também

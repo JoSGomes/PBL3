@@ -100,6 +100,8 @@ Na aba *code*, selecione no menu superior a opção *"Import Code"*, escolha a p
 > **OBS:** A opção *"Import Code"* só suporta 100 arquivos por vez, então será necessário importar uma pasta por vez.
 
 Após terminar o processo a sua skill está pronta para uso na sua conta! Você poderá fazer o teste dela na Aba *Test*, digitando "abrir " seguido da invocação que você escolheu para a *skill*.
+Vale ressaltar que a sua *skill* estará disponível também no aplicativo ***Alexa*** e também em sua **Echo dot**.
+> **OBS:** Tanto o aplicativo quanto a **Echo dot** devem está conectados a mesma conta que a *skill* foi criada.
 
 ## A placa *NodeMCU*
 

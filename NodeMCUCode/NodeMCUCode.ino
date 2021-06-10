@@ -52,7 +52,7 @@ void reconnect(); //Procedimento para conectar a placa ao MQTT.
 void carregarArquivos(); // Procedimento que carrega os arquivos de certificados do AWS.
 void sendNTPpacket(IPAddress &address);
 void enviarEvento(char * hour_, int day_, int month_, char * name_,char * description);
-void sendConnection(char * hour_, int interval);
+void sendConnection(int day_, char * hour_, int interval);
 time_t getNtpTime();
 void desativarAlarm();
 void ativarAlarm();
@@ -75,7 +75,7 @@ IPAddress server_addr(3,232,98,125);
 
 //Comandos para mandar os dados para o banco de dados:
 char INSERT_SQL_EVENTS[] = "INSERT INTO pbl.events (hour, day, month, name, description) VALUES ('%s','%d','%d','%s','%s')";
-char UPDATE_SQL_CONNECTION[] = "UPDATE `pbl`.`connections` SET `value` = 'Conectado', `hour` = '%s', `interval` = '%d' WHERE (`id` = '1')";
+char UPDATE_SQL_CONNECTION[] = "UPDATE `pbl`.`connections` SET `value` = 'Conectado', `hour` = '%s',`day` = '%d',`interval` = '%d' WHERE (`id` = '1')";
 char query[128];
 
 //Objeto MySQL_Connection com seu Client para conexão com o banco de dados MySQL:
@@ -142,7 +142,7 @@ void setup() {
   //Publica para informar que a placa esta conectada:
   char hour_[12];
   sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-  sendConnection(hour_, intervalAlarm/1000);
+  sendConnection(day(), hour_, intervalAlarm/1000);
   
   
   //captura o primeiro milli de inicialização da placa.
@@ -188,7 +188,7 @@ void loop() {
     //Publica para informar que a placa esta conectada:
       char hour_[12];
       sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-      sendConnection(hour_, intervalAlarm/1000);    
+      sendConnection(day(), hour_, intervalAlarm/1000);    
       laterMillis = millis();
   }
 
@@ -722,9 +722,9 @@ void enviarEvento(char * hour_ ,int day_, int month_, char * name_, char * descr
  *    interval -> intervalo de verificação em segundos
  * 
  */
-void sendConnection(char * hour_, int interval){
+void sendConnection(int day_ , char * hour_, int interval){
   //transforma os dados em um comando do MySQL:
-  sprintf(query, UPDATE_SQL_CONNECTION, hour_, interval);
+  sprintf(query, UPDATE_SQL_CONNECTION, hour_, day_ ,interval);
   // Inicia a instancia da classe de consulta:
   MySQL_Cursor * cur_mem = new MySQL_Cursor(&conn);
   //Executa a consulta (query):

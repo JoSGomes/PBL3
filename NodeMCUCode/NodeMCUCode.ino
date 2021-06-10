@@ -271,12 +271,7 @@ void loop() {
       }
       else if(accelerometer[0] == 0  && gyroscope[0] == 0 && gyroscope[1] == 0 && gyroscope[2] == 0){
         if(currentMillisAlarm == NULL){
-            currentMillisAlarm = millis();
-        }
-        laterMillisAlarm = millis();
-        if(laterMillisAlarm - currentMillisAlarm >= intervalAlarm){
-          ativarAlarm();
-          Serial.println("Moto parada até o tempo limite, alarme ativado!");
+          currentMillisAlarm = millis();      
         }
       }
       else{
@@ -284,7 +279,13 @@ void loop() {
       }
     }
   }
-
+  if(currentMillisAlarm != NULL){
+    laterMillisAlarm = millis();
+    if(laterMillisAlarm - currentMillisAlarm >= intervalAlarm){
+      ativarAlarm();
+      Serial.println("Moto parada até o tempo limite, alarme ativado!");
+    }
+  }
   if(imOK == false){
       if(currentMillisImOK == NULL){
         currentMillisImOK = millis();
@@ -464,6 +465,7 @@ void callback(char * topic, byte * payload, unsigned int length){
 void ativarAlarm(){
   digitalWrite(LED_BUILTIN, LOW);
   Serial.println("Alarme ativado!");
+  currentMillisAlarm = NULL;
   alarm = true;
 }
 

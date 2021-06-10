@@ -19,7 +19,7 @@ A ***Alexa*** cumpre duas funcionalidades no sistema como um todo. Ela pode noti
 
 Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você estava configurando a *skill* no passo-a-passo do <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***", desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
 
-> OBS: Após invocar a skill e fazer uma solicitação à ***Alexa***, é necessário que invoque-a novamente para esta implementação.
+> OBS: Após invocar a skill e fazer uma solicitação à ***Alexa***, é necessário que invoque-a novamente para outra solicitação nesta implementação.
 
 ## Sobre o estado de conexão e os Intervalos
 

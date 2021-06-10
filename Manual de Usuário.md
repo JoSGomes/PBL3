@@ -45,9 +45,10 @@ Falando qualquer uma dessas frases a Alexa irá ativar a funcionalidade de consu
 
 Para alterar os intervalos da NodeMCU é necessário falar alguma das frases a seguir, em que I,J,K são as quantidades de tempo desejadas:
 
-- Altere conexão para **I** minutos alarme para **J** minutos e estou bem para **K** minutos
-- Altere o intervalo de conexão para **I** minutos o intervalo de alarme para **J** minutos e o intervalo de estou bem para **K** minutos
-- Conexão para **I** minutos alarme para **J** e **K** minutos
+- Altere a conexão para **I** minuto(s)/segundos alarme para **J** minuto(s)/segundos e estou bem para **K** minuto(s)/segundos
+- Altere o intervalo de conexão para **I** minuto(s)/segundos o intervalo de alarme para **J** minuto(s)/segundos e o intervalo de estou bem para **K** minuto(s)/segundos.
+- Conexão para **I** minuto(s)/segundos alarme para **J** minuto(s)/segundos e estou bem para **K** minuto(s)/segundos.
+- Mudar conexão para **I** minuto(s)/segundos alarme para **J** minuto(s)/segundos e estou bem para **K** minuto(s)/segundos.
 
 Ao falar quaisquer das frases acima, a Alexa irá alterar os intervalos para os tempos que foram ditos.
 

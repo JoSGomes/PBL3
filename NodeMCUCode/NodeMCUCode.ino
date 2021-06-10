@@ -147,19 +147,22 @@ void setup() {
   
   //captura o primeiro milli de inicialização da placa.
   laterMillis = millis();
-  File f = SPIFFS.open("/historic.txt", "w"); //day,hour:minute\tvalores\tdescrição\n
+  /*File f = SPIFFS.open("/historic.txt", "w"); //day,hour:minute\tvalores\tdescrição\n
+
   
-  f.println("8,16:40\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("8,23:10\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,16:40\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,20:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,21:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,23:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,9:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,12:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,14:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.println("9,15:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
-  f.close();
+  f.println("10,13:30\t2.0,2.0,2.0,250.0,250.0,250.0\teventoTeste");
+  f.println("10,12:30\t2.0,2.0,2.0,250.0,250.0,250.0\teventoTeste");
+  f.println("10,15:31\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("10,16:31\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("10,21:34\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("10,22:11\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("10,23:37\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("11,6:31\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("11,7:32\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("11,8:30\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  f.println("11,9:30\t2.0,2.0,2.0,250.0,250.0,250.0\tteventoTeste");
+  
+  f.close();*/
   
 }
 
@@ -298,9 +301,11 @@ void loop() {
           Serial.println("Usuário sofreu um acidente ou a moto foi furtada!");
           Serial.println("Notificando contatos...");  
           if(alarm == true){
+            sendHistoric("FURTO - MOTO FOI FURTADA");
             enviarEvento(hour_, day(), month(), "FURTO", "MOTO FOI FURTADA");   
           }
           else{
+            sendHistoric("ACIDENTE - OCORREU UM ACIDENTE");
             enviarEvento(hour_, day(), month(), "ACIDENTE", "OCORREU UM ACIDENTE");
           }
           imOK = true;

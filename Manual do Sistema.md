@@ -93,13 +93,15 @@ No *console*, no menu lateral, vá até *Invocation*. No campo *"Skill Invocatio
 
 ### Importando bibliotecas 
 
-Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``Bibliotecas necessárias.zip``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
+Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``lib_alexa.zip``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
 
-Na aba *code*, selecione no menu superior a opção *"Import Code"*, escolha a pasta *zipada* ``Bibliotecas necessárias.zip`` e importe as pastas presentes nela. Após importar todas as pastas, clique em *Deploy* no canto superior direito e espere o processo terminar.
+Na aba *code*, selecione no menu superior a opção *"Import Code"*, escolha a pasta *zipada* ``lib_alexa.zip`` e importe as pastas presentes nela. Após importar todas as pastas, clique em *Deploy* no canto superior direito e espere o processo terminar.
 
 > **OBS:** A opção *"Import Code"* só suporta 100 arquivos por vez, então será necessário importar uma pasta por vez.
 
 Após terminar o processo a sua skill está pronta para uso na sua conta! Você poderá fazer o teste dela na Aba *Test*, digitando "abrir " seguido da invocação que você escolheu para a *skill*.
+Vale ressaltar que a sua *skill* estará disponível também no aplicativo ***Alexa*** e também em sua **Echo dot**.
+> **OBS:** Tanto o aplicativo quanto a **Echo dot** devem está conectados a mesma conta que a *skill* foi criada.
 
 ## A placa *NodeMCU*
 

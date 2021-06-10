@@ -223,6 +223,8 @@ Após ter o *Git* em seu computador vá a pasta do *Website* ``IoTwebSite`` e ex
 
 Antes de mais nada é necessário que você adicione dentro do arquivo *zipado* os arquivos de certificado, chave e *Root* que você guardou anteriormente (copie apenas os arquivos no formato original, ignorando os arquivos que foram alterados os formatos). Após isso, copie o arquivo ``.env`` que está presente na pasta do *Website* já configurado e altere apenas os diretórios dos arquivos de  certificado, chave e *Root*  anteriormente informados, porém, como o local foi mudado é necessário alterar. 
 
+> **OBS:** O arquivo ``.env`` precisa estar na pasta principal e os arquivos de certificado devem estar na pasta public ( pois o laravel reconhece a pasta public como pasta raiz).
+
 Após isso você tem seu arquivo do site pronto para ser postado.
 
 ### *Upando* site no Elastic Beanstalk

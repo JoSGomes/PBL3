@@ -5,8 +5,6 @@ Nesse manual é explicado como o usuário pode usar os recursos do ***Dispositiv
 
 ## Primeiros passos
 
-------
-
 Antes de mais nada, é necessário que o Website e a placa NodeMCU estejam configurados com todos os arquivos necessários. Caso ainda não tenha feito as configurações, siga as instruções no <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a>.
 
 Após ter tudo pronto e configurado, conecte a placa a energia e espere que a LED, presente na placa, pisque exatamente 5 vezes, isso significa que ela conseguiu fazer todas as conexões com sucesso. Por conseguinte, abra o site que deve estar hospedado em algum servidor ou que pode estar hospedado localmente. 
@@ -17,8 +15,6 @@ Após ter tudo pronto e configurado, conecte a placa a energia e espere que a LE
 Após isso, tudo está pronto para começar a utilizar o sistema!
 
 ## Funcionalidades da Alexa
-
-------
 
 A Alexa cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultar, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado, caso a motocicleta esteja parada, e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
 
@@ -54,8 +50,6 @@ Ao falar quaisquer das frases acima, a Alexa irá alterar os intervalos para os 
 
 ## Funcionalidades do Website
 
-------
-
 Entrando no *Website* na página inicial é possível ver os contatos de emergência que foram adicionados e a informação se o dispositivo está conectado.
 
 ### Botão "Alarme"
@@ -79,8 +73,6 @@ No menu do site existe uma opção chamada Configurações, ao clicar o você se
 - Tempo de 'Estou Bem'
 
 ## Funcionalidades da placa NodeMCU
-
-------
 
 A NodeMCU possui algumas funcionalidades com o botão *"FLASH"*, que permite que você tenha acesso manual a ela.
 

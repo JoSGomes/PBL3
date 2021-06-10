@@ -161,7 +161,6 @@ void setup() {
 }
 
 void loop() {
-  f.close();
   if(!client.connected())
     reconnect();
 

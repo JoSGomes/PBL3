@@ -401,7 +401,7 @@ void callback(char * topic, byte * payload, unsigned int length){
   //Verifica em qual tópico foi recebida a mensagem:
   int i=0;
   char aux[length];
-  if(!strcmp(topic, "INTERVALO_SITE_CONNECTION")){
+  if(!strcmp(topic, "INTERVAL_CONNECTION")){
      while(i < length){
       aux[i] = (char) payload[i];
       i++;
@@ -410,7 +410,7 @@ void callback(char * topic, byte * payload, unsigned int length){
       Serial.println(intervalConnection);
       intervalConnection = intervalConnection * 1000;//para milissegundos
   }
-  else if(!strcmp(topic, "INTERVALO_SITE_ALARM")){
+  else if(!strcmp(topic, "INTERVAL_ALARM")){
     while(i < length){
       aux[i] = (char) payload[i];
       i++;
@@ -418,6 +418,15 @@ void callback(char * topic, byte * payload, unsigned int length){
     intervalAlarm = atoi(aux);
     Serial.println(intervalAlarm);
     intervalAlarm = intervalAlarm * 1000;//para milissegundos
+  }
+  else if(!strcmp(topic, "INTERVAL_IMOK")){
+    while(i < length){
+      aux[i] = (char) payload[i];
+      i++;
+    }
+    intervalImOK = atoi(aux);
+    Serial.println(intervalImOK);
+    intervalImOK = intervalImOK * 1000;//para milissegundos
   }
   else if(!strcmp(topic, "SET_ALARM")){
     while(i < length){
@@ -593,8 +602,9 @@ void reconnect(){
       Serial.println("CONECTADO");
 
       //Faz a inscrição em tópicos:  
-      client.subscribe("INTERVALO_SITE_CONNECTION");
-      client.subscribe("INTERVALO_SITE_ALARM");
+      client.subscribe("INTERVAL_CONNECTION");
+      client.subscribe("INTERVAL_ALARM");
+      client.subscribe("INTERVAL_IMOK");
       client.subscribe("SET_ALARM");
     }
     else{

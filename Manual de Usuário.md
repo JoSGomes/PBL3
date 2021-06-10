@@ -17,7 +17,7 @@ Após ter tudo pronto e configurado, conecte a placa a energia e espere que a LE
 
 A ***Alexa*** cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultá-lo, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
 
-Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você está configurando a *skill* no passo-a-passo do <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***", desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
+Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você estava configurando a *skill* no passo-a-passo do <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***", desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
 
 > OBS: Após invocar a skill e fazer uma solicitação à ***Alexa***, é necessário que invoque-a novamente para esta implementação.
 

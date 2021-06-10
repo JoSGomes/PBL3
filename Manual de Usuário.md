@@ -1,5 +1,5 @@
 # Dispositivo para Motos - Manual de Usuário
-Nesse manual é explicado como o usuário pode usar os recursos do ***Dispositivo para motos*** no *Website* e na *Alexa*. Ao fim desse manual o leitor saberá todas as funcionalidades e como o *Website* e a *Alexa* funciona.
+Nesse manual é explicado como o usuário pode usar os recursos do ***Dispositivo para motos*** no *Website* e na ***Alexa***. Ao fim desse manual o leitor saberá todas as funcionalidades e como o *Website* e a ***Alexa*** funciona.
 
 > **OBS:** É necessário baixar todos os arquivos presentes no repositório para ser possível fazer as configurações. 
 
@@ -11,14 +11,23 @@ Após ter tudo pronto e configurado, conecte a placa a energia e espere que a LE
 
 > **OBS**: Caso o site esteja hospedado localmente, vá ao terminal, que deve estar aberto na pasta raiz do Website, digite ``php artisan serve`` , vá ao navegado e digite o link ``localhost:8080``. Entretanto, se estiver hospedado no próprio serviço do *AWS* *Elastic Beanstalk*, abra o *Website* utilizando o link disponibilizado pelo serviço.
 
- Por último, verifique se já tem a *skill* PBLSD da Alexa na sua lista de *skills*.  
-Após isso, tudo está pronto para começar a utilizar o sistema!
+ Por último, você irá precisar da *skill* da ***Alexa*** na sua conta para testar e, se quiser, também poderá testar no seu celular ou no seu *Echo Dot*, basta que um dos dois dispositivos estejam logados na conta em que a *skill* está implementada. Caso ainda não tenha a skill na sua conta, vá até o <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***" e faça o passo-a-passo.
 
 ## Funcionalidades da Alexa
 
-A Alexa cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultar, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado, caso a motocicleta esteja parada, e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
+A ***Alexa*** cumpre duas funcionalidades no sistema como um todo. Ela pode notificar o estado atual de conexão da NodeMCU, caso você deseje consultá-lo, alterar o intervalo de envio da conexão pela placa ao Banco de dados, o intervalo para que o alarme seja ativado e, também, o intervalo chamado de "estou bem", para que o usuário indique que está tudo bem.
 
-Para começar, é necessário abrir a *skill*  na Alexa, para isso, fale ``abrir dispositivo para motos`` , desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
+Para começar, é necessário abrir a *skill*  na ***Alexa***, para isso, fale ``abrir dispositivo para motos`` ou a invocação que foi escolhida quando você está configurando a *skill* no passo-a-passo do <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> no tópico "***Alexa***", desse modo você estará invocando a *skill* e as suas funcionalidades estarão disponíveis.
+
+> OBS: Após invocar a skill e fazer uma solicitação à ***Alexa***, é necessário que invoque-a novamente para esta implementação.
+
+## Sobre o estado de conexão e os Intervalos
+
+O tempo de conexão é o intervalo de tempo que o *Website* testará a conexão com a NodeMCU.
+
+O tempo de alarme é o tempo em que a placa, ao não receber nenhuma alteração nos sensores e a moto estiver parada, acionará automaticamente o modo alarme.
+
+O tempo de 'Estou Bem' diz respeito ao tempo de tolerância que a NodeMCU terá, do momento que detectar um possível acidente ao momento de ligação dos contatos de emergência, vale lembrar que se o botão da placa for pressionado nesse intervalo de tolerância a placa não irá fazer a ligação para os contatos de emergência, pois isso indica que está tudo bem. 
 
 ### Consultar o estado atual da NodeMCU
 
@@ -39,12 +48,6 @@ Para alterar os intervalos da NodeMCU é necessário falar alguma das frases a s
 - Altere conexão para **I** minutos alarme para **J** minutos e estou bem para **K** minutos
 - Altere o intervalo de conexão para **I** minutos o intervalo de alarme para **J** minutos e o intervalo de estou bem para **K** minutos
 - Conexão para **I** minutos alarme para **J** e **K** minutos
-
-O tempo de conexão é o intervalo de tempo que o site testará a conexão com a Placa NodeMCU.
-
-O tempo de alarme é o tempo, em que a placa, ao não receber nenhuma alteração nos sensores, acionará automaticamente o modo alarme.
-
-O tempo de 'Estou Bem' diz respeito ao tempo de tolerância que a NodeMCU terá, do momento que detectar um possível acidente ao momento de ligação dos contatos de emergência, vale lembrar que se o botão da placa for pressionado nesse intervalo de tolerância a placa não irá fazer a ligação para os contatos de emergência. 
 
 Ao falar quaisquer das frases acima, a Alexa irá alterar os intervalos para os tempos que foram ditos.
 

@@ -7,6 +7,8 @@ Nesse manual será explicado como o usuário deve fazer a integração das ferra
 
 Uma das ferramentas utilizada para o desenvolvimento do ***Dispositivo Para Motos*** é o ***AWS***, um sistema de serviços web da Amazon, que disponibiliza vários recursos em nuvem para desenvolvimento de aplicações. Dentre os recursos disponibilizados, os utilizados para essa aplicação *- e que você, usuário, deve configurar -* foram o ***IoT Core***, recurso que disponibiliza um servidor para comunicações MQTT, e o ***RDS***, recurso que disponibiliza um sistema de banco de dados relacional.
 
+> Além desses recursos, um outro - Elastic Beanstalk - será utilizado. Na sessão Website esse recurso será abordado.
+
 Sem mais conversas, vamos *"por a mão na massa"*!
 
 ### IoT Core
@@ -60,29 +62,42 @@ Para acessar esse recurso e visualizar os dados, além também de poder alterar 
 
 O aplicativo tem a possibilidade de conexão com a ***Alexa***, a assistente virtual da Amazon. Através da ***Alexa*** você pode fazer algumas funcionalidades do aplicativo - funcionalidades essas que serão descritas no <a href = "https://github.com/JoSGomes/PBL3/blob/main/Manual%20de%20Usu%C3%A1rio.md">Manual do Usuário</a>.
 
-As funcionalidades são feitas a partir de *"Skills"* que podem ser feitas por qualquer um a partir do site https://developer.amazon.com/alexa/console/ask.  Após entrar nesse site você visualiza facilmente o botão *"create skill"*. Clique nele para ser direcionado ao menu de criação.
+As funcionalidades são feitas a partir de *"Skills"* que podem ser feitas por qualquer um a partir do site https://developer.amazon.com/alexa/console/ask. É por meio desse site que também será feita a configuração da *skill* da ***Alexa*** para a aplicação ***Dispositivo para Motos***.
 
-### Criando uma *Skill*
+> **OBS:** Para configurar a *Skill* para a sua conta é necessário que você esteja "logado" em sua conta da ***Alexa*** ao entra nesse site.
 
-Quando entrar no menu de criação escolha um nome para sua *Skill*, a linguagem, o modelo e também a linguagem de programação que deseja usar. É recomendado utilizar o idioma português e o modelo personalizado para que você faça do seu jeito! Após escolher clique em *"create skill"* - ou criar habilidade, em português.
+### Configurando a *Skill*
 
-Após isso, você verá duas opções de modelo para começar a criar a sua *skill* - você pode escolher. Depois de escolher selecione o botão *"create with template"* e você será direcionado ao painel de criação da *skill*.
+Após entrar nesse site você visualiza facilmente o botão *"create skill"*. Clique nele para ser direcionado ao menu de criação. Quando entrar no menu de criação escolha:
 
-### Definindo *Invocation* e uma *Intent*
+- Um nome para sua *Skill* *(de sua preferência)*;
+- Português como linguagem;
+- O modelo personalizado;
+- E a linguagem de programação *"Python"*. 
 
-No painel de criação, no menu lateral esquerdo navegue para *Invocation* e defina como deseja invocar a sua *skill* com a ***Alexa***. Após escolher a sua *"skill invocation name"*, clique em *"save model"* e em seguida em *"build model"*.
+Após escolher esses itens clique em *"create skill"* - ou *"criar habilidade"*, em português.
 
-Novamente no menu lateral esquerdo navegue para *Interaction Model/Intents* e crie uma nova *"intent"* clicando no botão *"Add Intent"*. Escolha um nome e clique em *"create custom intent"*. Pronto, sua *"intent"* foi criada. Ela será uma interação que você terá com a ***Alexa***. Após criá-la, você será direcionado ao painel de edição da *"intent"* onde você poderá escolher formas de invocá-la. Você também pode adicionar variáveis na invocação para capturar dados utilizando esse formato: ``{variavel}``. Após criar a *"intent"* e as suas invocações, clique em *"save model"* e em seguida em *"build model"*.
+Após isso, você verá duas opções de modelo para começar a criar a sua *skill* - ignore-as. Essa escolha só é importante caso você queira criar uma skill do zero. Para apenas configurar escolha a opção *"import skill"* no canto superior direito e informe o seguinte *link:*
 
-*Sua invocation e intent foram criadas, agora vamos para o próximo passo!*
+​								``https://github.com/JoSGomes/Skill-PBL3-SD.git``
 
-### Codificando
+> Esse link é de um repositório contendo a skill configurada.
 
-Na aba *code* você encontrará o código referente a sua *skill*. É aí que você faz as suas preferências. Quando você utiliza a invocação da *skill* criada a ***Alexa*** executa função ``handle`` da *class* ``LaunchRequestHandler(...)``. Se você quiser alterar o texto de inicio, basta alterar o valor da variável ``speak_output``.
+Após o *build* da *skill* finalizar você será direcionado para o *console* da ***Alexa***.
 
-Agora a parte mais importante. Para que seja possível utilizar a *"intent"* criada, você deve fazer uma *class* com ``"nome da sua intent"``+``Handle``, no mesmo padrão das outras *class* presentes no código - pode copiar e colar, o que vai alterar é que na função ``can_handle`` é necessário mudar o parâmetro da função que é retornada para o nome da sua *"intent"*. Dentro da função ``handle``, enfim, faça o que deseja fazer com a sua *skill*.
+### Definindo *Invocation*
 
-Após fazer todas essas configurações, no fim do código coloque ``sb.add_request_handler("nome da sua class")`` logo abaixo de ``sb = SkillBuilder()``.
+No *console*, no menu lateral, vá até *Invocation*. No campo *"Skill Invocation Name"* escolha como você deseja chamar a skill - É uma escolha arbitrária, sugerimos *"dispositivo para motos"*. No menu superior, após escolher a invocação, clique em *"Save Model"* e *"Build Model"*, respectivamente, e espere o processo concluir.
 
-Com isso, dê um *"save"* e *"deploy"*. Pronto, *skill* criada com sucesso! Você pode testar pela aba *"Test"*.
+> O nome dado a invocação só deve conter letras minúsculas.
+
+### Importando bibliotecas 
+
+Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``Bibliotecas necessárias``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
+
+
+
+### A *skill* da aplicação
+
+Juntamente com os arquivos baixados do repositório está o código da *skill* criada para utilização na aplicação em linguagem *"Python"* e, é possível fazer a importação da aplicação para uma skill que você está criando.
 

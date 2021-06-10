@@ -78,13 +78,19 @@ No menu do site existe uma opção chamada Configurações, ao clicar o você se
 
 ## Funcionalidades da placa NodeMCU
 
-A NodeMCU possui algumas funcionalidades com o botão *"FLASH"*, que permite que você tenha acesso manual a ela.
+A NodeMCU possui as funcionalidades de modo alarme, modo acidente e o histórico das últimas 24 horas, o qual reside na placa, que pode ser exibido a você. 
 
-### Botão "FLASH" 
+### Modo Alarme
 
-Esse botão é responsável por ativar o modo alarme manualmente, ao pressioná-lo a LED na placa irá acender, o que significa que o alarme está ativado, pressioná-lo novamente desliga o modo alarme e a LED é apagada.
+Ao pressionar o botão "FLASH", a LED na placa irá acender indicando que o alarme está ativado. Pressioná-lo novamente desliga o modo alarme e a LED é apagada.
 
-Por ela guardar o histórico de possíveis acidentes, acidentes, de fato, e furtos durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um monitor serial e conecte a placa ao computador, como foi visto no  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> que você pode consultar para realizar essa configuração se ainda não fez.
+### Modo Acidente
+
+Quando a LED está desligada o modo acidente está a todo momento ativo, ou seja, ele estará detectando possíveis acidentes.
+
+### Histórico
+
+Por ela guardar o histórico de possíveis acidentes, acidentes confirmados, possíveis furtos e furtos confirmados durante 24 horas, existe uma forma de mostrá-lo a você, para isso é necessário que você configure um monitor serial e conecte a placa ao computador, como foi visto no  <a href="https://github.com/JoSGomes/PBL3/blob/main/Manual%20do%20Sistema.md">Manual de sistema</a> que você pode consultar para realizar essa configuração se ainda não fez.
 
 A forma para o histórico ser mostrado para você é pelo monitor serial, para isso, basta que pressione o botão "FLASH" por 3 segundos, assim todo o histórico das últimas 24 horas que reside na placa será mostrado para você.
 
@@ -94,5 +100,5 @@ A placa tem dois sensores: o acelerômetro e o giroscópio. Assim, para que ela 
 
 ### Detecção de furto
 
-Utilizando os mesmo sensores, caso o modo alarme esteja ativado e os sensores detectem qualquer movimentação na motocicleta a NodeMCU, então, detecta um estado de "Possível furto". Desse modo, o intervalo do "estou bem" é contabilizado, se utilizador não ir até a NodeMCU pressionar o botão "FLASH", indicando que está tudo bem, dentro deste intervalo, a placa então detecta que um furto aconteceu.
+Utilizando os mesmo sensores, caso o modo alarme esteja ativado e os sensores detectem qualquer movimentação na motocicleta a NodeMCU, então, detecta um estado de "Possível furto". Desse modo, o intervalo do "estou bem" é contabilizado, se utilizador não pressionar o botão "FLASH" na NodeMCU, dentro deste intervalo, a placa então detecta que um furto ocorreu.
 

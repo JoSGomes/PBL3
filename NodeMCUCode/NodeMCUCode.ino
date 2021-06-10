@@ -147,16 +147,20 @@ void setup() {
   
   //captura o primeiro milli de inicialização da placa.
   laterMillis = millis();
-  File f = SPIFFS.open("/historic.txt", "w");
+  File f = SPIFFS.open("/historic.txt", "w"); //day,hour:minute\tvalores\tdescrição\n
+  f.println("9,16:40\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,20:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,21:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,23:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,9:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,12:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,14:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("9,15:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
   f.close();
   
 }
 
 void loop() {
-  File f = SPIFFS.open("/historic.txt", "r");
-  while(f.available()){
-    Serial.println(f.readStringUntil('\n'));
-  }
   f.close();
   if(!client.connected())
     reconnect();
@@ -167,19 +171,34 @@ void loop() {
   
   //Verifica se o button foi pressionado:
   if(!digitalRead(BUTTON)){
-    //Verifica o estado da lâmpada:
-    if(!digitalRead(LED_BUILTIN) && imOK){
-      desativarAlarm();
+    int count = 0;
+    while(!digitalRead(BUTTON)){
+      count++;
+      if(count == 5)
+        Serial.println("Solte o botão para visualizar o histórico");
+      delay(500);
     }
-    else if(imOK){
-      ativarAlarm();    
-    }    
-    if(!imOK){
-      imOK = true;
-      currentMillisImOK = NULL;
-      Serial.println("Usuário clicou no botão antes do tempo limite, está tudo bem.");
+    if(count >= 5){
+      File f = SPIFFS.open("/historic.txt", "r");
+      while(f.available()){
+        Serial.print(f.readStringUntil('\n'));
+      }
+      f.close();
     }
-    
+    else{
+      //Verifica o estado da lâmpada:
+      if(!digitalRead(LED_BUILTIN) && imOK){
+        desativarAlarm();
+      }
+      else if(imOK){
+        ativarAlarm();    
+      }    
+      if(!imOK){
+        imOK = true;
+        currentMillisImOK = NULL;
+        Serial.println("Usuário clicou no botão antes do tempo limite, está tudo bem.");
+      }
+    }
   }
   
   currentMillis = millis();
@@ -191,10 +210,7 @@ void loop() {
       sendConnection(day(), hour_, intervalConnection/1000);    
       laterMillis = millis();
   }
-
-  delay(500);
-  char hour_[7];
-  sprintf(hour_, "%d:%d", hour(), minute());
+  
   
   if(Serial.available()){
     readTrue = true;
@@ -216,7 +232,9 @@ void loop() {
     readTrue = false;
   }
   
-    
+  char hour_[7];
+  sprintf(hour_, "%d:%d", hour(), minute());
+  
   if(readTrue && imOK){
     if(alarm == true){
       if(accelerometer[0] != 0 || gyroscope[0] != 0 || gyroscope[1] != 0 || gyroscope[2] != 0){//verifica o acelerômetro em X,Y,Z
@@ -292,23 +310,20 @@ void loop() {
 }
 
 void sendHistoric(char * description){
-  File f = SPIFFS.open("/historic.txt", "r"); //day,hour:minute:second\tvalores\tdescrição\n
+  File f = SPIFFS.open("/historic.txt", "r");
   if(f == NULL)
     f = SPIFFS.open("/historic.txt", "w");
   else{
     int data[4];
     String firstLine = f.readStringUntil('\n');
+    
     if(firstLine != NULL){
+      
       char firstLineChar[firstLine.length()];
-      Serial.println("antes do strcpy");
       strcpy(firstLineChar, firstLine.c_str());
-      Serial.println(firstLineChar);
       int dia = atoi(strtok(firstLineChar, ","));
-      Serial.println(dia);
       int hora = atoi(strtok(NULL, ":"));
-      Serial.println(hora);
       int minuto = atoi(strtok(NULL, ":"));
-      Serial.println(minuto);
       
       if(dia != day()){
         File faux = SPIFFS.open("/aux.txt","w");
@@ -357,8 +372,7 @@ void sendHistoric(char * description){
       }
     }
   }
-
-
+  
   f = SPIFFS.open("/historic.txt","a");
   if(!f)
     Serial.println("Erro ao abrir o histórico");

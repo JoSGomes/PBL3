@@ -148,6 +148,9 @@ void setup() {
   //captura o primeiro milli de inicialização da placa.
   laterMillis = millis();
   File f = SPIFFS.open("/historic.txt", "w"); //day,hour:minute\tvalores\tdescrição\n
+  
+  f.println("8,16:40\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
+  f.println("8,23:10\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
   f.println("9,16:40\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
   f.println("9,20:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
   f.println("9,21:30\t2.0,2.0,2.0,250.0,250.0,250.0\ttombou");
@@ -376,7 +379,7 @@ void verifyHistoric(){
 }
 
 void sendHistoric(char * description){
-  f = SPIFFS.open("/historic.txt","a");
+  File f = SPIFFS.open("/historic.txt","a");
   if(!f)
     Serial.println("Erro ao abrir o histórico");
   else{

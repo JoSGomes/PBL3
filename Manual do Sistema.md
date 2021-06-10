@@ -173,3 +173,69 @@ Para que seja possível carregar as instruções de execução na placa, primeir
 Por fim, após realizar todos esses passos vocês está pronto para carregar o código em sua placa *NodeMCU*. Com sua placa conectada ao computador, abra na *Arduino IDE* o arquivo ``NodeMCUCode.ino`` (presente na pasta de mesmo nome) e clique no ícone de seta no canto superior esquerdo para carregar o código em sua placa. Espere todo o processo, e pronto, ***sua placa está configurada para uso!***
 
 ## Website
+
+O site presente no sistema foi criado a partir do *framework Laravel* e estará presente no diretório do sistema na pasta com nome de ``PBL2-website`` e para fazer uso dessa ferramenta é necessário configurá-la. Para a configuração será necessário a presença do Xampp, do composer e do Laravel em seu computador (Vide como fazer instalação desses recursos).
+
+>Para auxiliar esse processo o software ***Visual Studio Code*** da *Microsoft* é recomendado, porém não é essencial.
+
+###  Configurar Website
+
+Abra o terminal do seu SO e navegue à pasta ``IoTwebSite`` (se tiver utilizando o VS Code, basta abrir a pasta com o software e usar o terminal do mesmo). Execute os comandos a seguir nessa mesma ordem: ``composer install``; ``composer update``. Espere os processos entre esses comandos.
+
+Após executar esses comandos, vá ao diretório do website, ``IoTwebSite``, crie um arquivo com nome vazio e extensão ``.env``, abra o arquivo ``.env.example`` que está presente na pasta e copie todo o seu conteúdo para o arquivo ``.env`` que você acabou de criar. Salve. Após isso, execute o comando ``php artisan key:generate`` no terminal. Espere o processo.
+
+### Credenciais do Banco de dados no Website
+
+Abra o arquivo ``.env`` e vá até a linha 10 do mesmo, onde você verá várias variáveis com o prefixo ``DB_``. São elas que você vai alterar. Nas seguintes variáveis, atribua os valores correspondentes:
+
+- **DB_HOST:**  *pbl.cxqwhnwtx9nu.us*-east-1.rds.amazonaws.com
+- **DB_USERNAME:** *admin*
+- **DB_PASSWORD:** *password*
+
+Salve o arquivo.
+
+### Credenciais do MQTT no Website
+
+Abra o arquivo ``.env`` e vá ao final do mesmo e você verá várias variáveis com o prefixo``MQTT``. Serão necessários alterar alguns desses atribuindo os valores correspondentes:
+
+-  **MQTT_HOST:** coloque o *EndPoint* da Thing do AWS;
+-  **MQTT_TLS_CA_FILE:** coloque o diretório do arquivo ``Root CA`` baixado;
+-  **MQTT_TLS_CLIENT_CERT_FILE:** coloque o diretório do arquivo ``A certificate for this thing`` baixado;
+-  **MQTT_TLS_CLIENT_CERT_KEY_FILE:** coloque o diretório do arquivo ``A private key`` baixado;
+
+> **OBS:** Os arquivos devem ser colocados em seus formatos originais, sem conversão;
+
+Salve o arquivo.
+
+# Pronto!
+
+Após todo esse processo seu site está pronto para uso! Basta apenas você executar o comando ``php artisan serve`` no terminal na pasta ``IoTwebSite`` e abrir no navegador com o endereço *IP* passado pelo *Laravel* ou utilizar *localhost:8000*.
+Existe também a possibilidade da utilização do serviço *Elastic Beanstalk* do *AWS* para hospedar o site na nuvem. 
+
+##### Caso ache desnecessário, pule esse passo e aproveite o seu ***WebSite :)***.
+
+## Elastic Beanstalk
+
+Para utilizar esse serviço, primeiramente é necessário que você tenha instalado o *Git* no seu computador e ele esteja na *Path* das variáveis de ambiente.
+Após ter o *Git* em seu computador vá a pasta do *Website* ``IoTwebSite`` e execute o comando ``git archive -v -o myapp.zip --format=zip HEAD`` trocando o nome ``myapp`` para o nome que desejar nomear o arquivo. Esse comando fará um arquivo *zipado* para você utilizá-lo no serviço do ***AWS***.
+
+### Configurando e *zipando* o arquivo do Website
+
+Antes de mais nada é necessário que você adicione dentro do arquivo *zipado* os arquivos de certificado, chave e *Root* que você guardou anteriormente (copie apenas os arquivos no formato original, ignorando os arquivos que foram alterados os formatos). Após isso, copie o arquivo ``.env`` que está presente na pasta do *Website* já configurado e altere apenas os diretórios dos arquivos de  certificado, chave e *Root*  anteriormente informados, porém, como o local foi mudado é necessário alterar. 
+
+Após isso você tem seu arquivo do site pronto para ser postado.
+
+### *Upando* site no Elastic Beanstalk
+
+Navegue no site do ***AWS*** até o menu do ***Elastic Beanstalk*** e selecione, na página inicial, *"create application"*. Escolha um nome de sua preferência, altere a plataforma para *PHP* e em *"Plataform branch"* coloque *PHP 7.4 ...* . Em *"Application code"*  marque *Sample application* e por fim clique no botão laranja *create application*. Espere o processo de criação.
+
+Após o processo você será direcionado para a página de edição da aplicação. Selecione "*Upload and deploy* " e selecione o arquivo *zipado* contendo o site que foi editado anteriormente.
+
+Após fazer o *upload* do arquivo do site, navegue no menu lateral para *"configuration"*. Em *"configuration"* vá na categoria *"software"* e selecione editar. Altere o *"proxy server"* para *Apache* e em *"Document root"* coloque */public*.
+
+Pronto, tudo já foi configurado. Volte agora para a página de edição da aplicação e abra o link fornecido pelo ***Elastic Beanstalk***. Por esse link qualquer pessoa pode acessar seu site.
+
+##### Desfrute da aplicação ***Dispositivos para Motos:two_hearts::two_hearts:***
+
+##### A Equipe de Desenvolvimento agradece :clap::clap::clap::clap:
+

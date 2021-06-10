@@ -17,6 +17,7 @@ class CreateConnectionsTable extends Migration
             $table->id();
             $table->string('value');
             $table->string('hour');
+            $table->integer('day');
             $table->integer('interval');
         });
     }

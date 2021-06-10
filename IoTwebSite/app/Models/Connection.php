@@ -14,6 +14,7 @@ class Connection extends Model
     protected $fillable = [
         'value',
         'hour',
+        'day',
         'interval',
     ];
 }

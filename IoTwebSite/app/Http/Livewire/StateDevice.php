@@ -30,20 +30,25 @@ class StateDevice extends Component
        $hour =  $hour[0] * 3600 +  $hour[1] * 60 +  $hour[2] * 1;
        
        date_default_timezone_set('America/Bahia');
-       $actualHour = explode ( ':' , date ( "G:i:s") , 3) ;
+       $actualHour = explode ( ':' , date ( "G:i:s") ,3);
        $actualHour =  $actualHour[0] * 3600 +  $actualHour[1] * 60 +  $actualHour[2] * 1; 
+       $actualDay = date("j")*1;
        
-
-        if ($hour+$connect->interval >= $actualHour ) {
-            $this->state = 'Conectado';
-            $connect->value = 'Conectado';
-            $connect->save();
+        if ($connect->day >= $actualDay) {
+            if ($hour+$connect->interval >= $actualHour ) {
+                $this->state = 'Conectado';
+                $connect->value = 'Conectado';
+                $connect->save();
+            } else {
+                $this->state = 'Desconectado';
+                $connect->value = 'Desconectado';
+                $connect->save();
+            }
         } else {
             $this->state = 'Desconectado';
             $connect->value = 'Desconectado';
             $connect->save();
-        }
-        
+        }        
     }
 
     public function hourVerification(){

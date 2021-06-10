@@ -142,7 +142,7 @@ void setup() {
   //Publica para informar que a placa esta conectada:
   char hour_[12];
   sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-  sendConnection(day(), hour_, intervalAlarm/1000);
+  sendConnection(day(), hour_, intervalConnection/1000);
   
   
   //captura o primeiro milli de inicialização da placa.
@@ -188,7 +188,7 @@ void loop() {
     //Publica para informar que a placa esta conectada:
       char hour_[12];
       sprintf(hour_, "%d:%d:%d", hour(), minute(), second());
-      sendConnection(day(), hour_, intervalAlarm/1000);    
+      sendConnection(day(), hour_, intervalConnection/1000);    
       laterMillis = millis();
   }
 

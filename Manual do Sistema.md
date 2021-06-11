@@ -91,11 +91,13 @@ No *console*, no menu lateral, vá até *Invocation*. No campo *"Skill Invocatio
 
 > O nome dado a invocação só deve conter letras minúsculas.
 
-### Importando bibliotecas 
+### Importando bibliotecas e certificados
 
 Navegando no *console* da ***Alexa***, vá até a aba *code*. Nela serão feitas algumas importações de bibliotecas necessárias para que a *skill* funcione como deve. Juntamente com os arquivos baixados do repositório se encontra uma pasta *zipada* com nome de ``lib_alexa.zip``, e é nela que estão as bibliotecas que iremos importar para o *console* da ***Alexa***.
 
 Na aba *code*, selecione no menu superior a opção *"Import Code"*, escolha a pasta *zipada* ``lib_alexa.zip`` e importe as pastas presentes nela. Após importar todas as pastas, clique em *Deploy* no canto superior direito e espere o processo terminar.
+
+Após importar as bibliotecas, importe também os arquivos de certificado - lembrando que devem ser os arquivos que não foram convertidos para ``.der``. Esses arquivos devem ser renomeados de ``AmazonRootCA1.pem`` para ``CA.pem``, de ``"código do seu arquivo"-private.pem.key`` para ``private.pem.key`` e de ``"código do seu arquivo"-certificate.pem.crt`` para ``certificate.pem``.
 
 > **OBS:** A opção *"Import Code"* só suporta 100 arquivos por vez, então será necessário importar uma pasta por vez.
 

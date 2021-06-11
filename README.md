@@ -1,4 +1,4 @@
 # PBL3
-Repositório dedicado ao Problema 3 da disciplina de Sistemas Digitais
+Repositório dedicado ao Problema 3 - Monitoramento Contínuo da disciplina de Sistemas Digitais
 
-Mateus, José Gabriel e Thiago
+Mateus Fernandes, José Gabriel e Thiago Cardozo

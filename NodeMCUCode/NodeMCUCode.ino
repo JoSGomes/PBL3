@@ -132,7 +132,7 @@ void setup() {
   //Conecta a placa ao MQTT
   reconnect();
   
-   //inicia o objeto Udp na portal local informada (8888):
+  //inicia o objeto Udp na portal local informada (8888):
   Udp.begin(localPort);
 
   //Faz a sincronização do provedor para capturar o timestemp correto:
